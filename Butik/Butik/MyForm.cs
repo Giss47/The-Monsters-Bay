@@ -13,6 +13,7 @@ namespace Butik
     {
         public MyForm()
         {
+            Text = "the Monsters Bay";
             Icon = new Icon("resources/icon.ico");
         }
     }
