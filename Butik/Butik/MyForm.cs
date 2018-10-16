@@ -11,5 +11,9 @@ namespace Butik
 {
     class MyForm : Form
     {
+        public MyForm()
+        {
+            Icon = new Icon("resources/icon.ico");
+        }
     }
 }
