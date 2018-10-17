@@ -21,7 +21,7 @@ namespace Butik
 
 
             ToolTip popUp = new ToolTip();
-            string[] pics = Directory.GetFiles(@"resources\tucksPics\", "*.jpg")
+            string[] pics = Directory.GetFiles(@"resources\truksPics\", "*.jpg")
                                       .Select(Path.GetFileName)
                                       .ToArray();
 
@@ -30,7 +30,7 @@ namespace Butik
                 PictureBox picture = new PictureBox
                 {
                     SizeMode = PictureBoxSizeMode.StretchImage,
-                    Image = Image.FromFile(string.Format(@"resources\tucksPics\Bild{0}.jpg", i)),
+                    Image = Image.FromFile(string.Format(@"resources\truksPics\Bild{0}.jpg", i)),
                     Size = new Size(200, 150),
                     Margin = new Padding(20),
                     Cursor = Cursors.Hand
