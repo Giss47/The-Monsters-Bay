@@ -74,40 +74,40 @@
     <Content Include="resources\icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\truksPics\Bild1.jpg">
+    <Content Include="resources\truckPics\Bild1.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\truksPics\Bild10.jpg">
+    <Content Include="resources\truckPics\Bild10.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\truksPics\Bild11.jpg">
+    <Content Include="resources\truckPics\Bild11.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\truksPics\Bild12.jpg">
+    <Content Include="resources\truckPics\Bild12.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\truksPics\Bild2.jpg">
+    <Content Include="resources\truckPics\Bild2.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\truksPics\Bild3.jpg">
+    <Content Include="resources\truckPics\Bild3.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\truksPics\Bild4.jpg">
+    <Content Include="resources\truckPics\Bild4.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\truksPics\Bild5.jpg">
+    <Content Include="resources\truckPics\Bild5.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\truksPics\Bild6.jpg">
+    <Content Include="resources\truckPics\Bild6.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\truksPics\Bild7.jpg">
+    <Content Include="resources\truckPics\Bild7.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\truksPics\Bild8.jpg">
+    <Content Include="resources\truckPics\Bild8.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\truksPics\Bild9.jpg">
+    <Content Include="resources\truckPics\Bild9.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
