@@ -11,6 +11,8 @@ namespace Butik
 {
     class Cart
     {
+        private List<Dictionary<string, int>> cartList = new List<Dictionary<string, int>> { };
+
         public static TableLayoutPanel GetPanel()
         {
             TableLayoutPanel panel = new TableLayoutPanel()
