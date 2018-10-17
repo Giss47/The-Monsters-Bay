@@ -32,7 +32,8 @@ namespace Butik
                     SizeMode = PictureBoxSizeMode.StretchImage,
                     Image = Image.FromFile(string.Format(@"resources\tucksPics\Bild{0}.jpg", i)),
                     Size = new Size(200, 150),
-                    Margin = new Padding(20)
+                    Margin = new Padding(20),
+                    Cursor = Cursors.Hand
                 };
                 Controls.Add(picture);
                 popUp.SetToolTip(picture, "Click to view details");
