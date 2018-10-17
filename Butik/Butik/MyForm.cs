@@ -54,6 +54,21 @@ namespace Butik
 
             mainPanel.Controls.Add(Cart.GetPanel());
 
+            FormClosing += MyForm_FormClosing;
+
+
+        }
+
+        private void MyForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            string message =
+                 "Are you sure  you would like to exit The Monsters Bay?";
+            string caption = "Exit";
+            var result = MessageBox.Show(message, caption,
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question);           
+            if (result == DialogResult.No)                     
+                e.Cancel = true;
             
         }
     }
