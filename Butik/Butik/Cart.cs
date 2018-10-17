@@ -9,14 +9,28 @@ using System.Drawing.Printing;
 
 namespace Butik
 {
+    class Product
+    {
+        public string Name { get; private set; }
+        public int Price { get; private set; }
+        public int Quantity { get; private set; }
+
+        public Product(string name, int price, int quantity)
+        {
+            Name = name;
+            Price = price;
+            Quantity = quantity;
+        }
+    }
+
     class Cart
     {
-        private Dictionary<string, int> cart = new Dictionary<string, int> {
-            ["Test product1"] = 345,
-            ["Test product2"] = 543,
-            ["Test product3"] = 678,
-            ["Test product4"] = 876,
-            ["Test product5"] = 321
+        static List<Product> cart = new List<Product> {
+            new Product("Tesp Produkt 1", 399, 1),
+            new Product("Tesp Produkt 2", 456, 1),
+            new Product("Tesp Produkt 3", 324, 1),
+            new Product("Tesp Produkt 4", 678, 1),
+            new Product("Tesp Produkt 5", 987, 1)
         };
 
         public static TableLayoutPanel GetPanel()
@@ -66,11 +80,13 @@ namespace Butik
             panel.SetCellPosition(totalCostLabel, new TableLayoutPanelCellPosition(1, 2));
             panel.Controls.Add(totalCostLabel);
 
+            int totalCost = 0;
+            cart.ForEach(p => totalCost += p.Price);
             Label priceLabel = new Label()
             {
                 Font = new Font("Arial", 12),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Text = "$4.567",
+                Text = "$" + totalCost,
                 Dock = DockStyle.Fill
             };
             panel.SetCellPosition(priceLabel, new TableLayoutPanelCellPosition(2, 2));
@@ -128,11 +144,14 @@ namespace Butik
 
         private static void PlaceOrderButtonClick(object sender, EventArgs e)
         {
-            string receipt = "This is your receipt.\r\n" +
-                "You bought some stuff.\r\n" +
-                "This is just random text.\r\n" +
-                "\r\n" +
-                "Would you like to print a copy?";
+            string receipt = "";
+            int totalPrice = 0;
+            foreach (Product p in cart)
+            {
+                receipt += string.Format("{0} x {1} (${2}) \r\n", p.Quantity, p.Name, p.Price);
+                totalPrice += p.Price;
+            }
+            receipt += "\r\n Total price: $" + totalPrice;
 
             DialogResult result = MessageBox.Show(
                     receipt,
