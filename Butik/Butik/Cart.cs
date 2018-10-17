@@ -11,7 +11,13 @@ namespace Butik
 {
     class Cart
     {
-        private List<Dictionary<string, int>> cartList = new List<Dictionary<string, int>> { };
+        private Dictionary<string, int> cart = new Dictionary<string, int> {
+            ["Test product1"] = 345,
+            ["Test product2"] = 543,
+            ["Test product3"] = 678,
+            ["Test product4"] = 876,
+            ["Test product5"] = 321
+        };
 
         public static TableLayoutPanel GetPanel()
         {
