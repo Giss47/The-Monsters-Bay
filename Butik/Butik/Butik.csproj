@@ -64,9 +64,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="resources\backgounds\2001.png" />
     <Content Include="resources\icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\truksPics\Bild1.jpg" />
+    <Content Include="resources\truksPics\Bild10.jpg" />
+    <Content Include="resources\truksPics\Bild11.jpg" />
+    <Content Include="resources\truksPics\Bild12.jpg" />
+    <Content Include="resources\truksPics\Bild2.jpg" />
+    <Content Include="resources\truksPics\Bild3.jpg" />
+    <Content Include="resources\truksPics\Bild4.jpg" />
+    <Content Include="resources\truksPics\Bild5.jpg" />
+    <Content Include="resources\truksPics\Bild6.jpg" />
+    <Content Include="resources\truksPics\Bild7.jpg" />
+    <Content Include="resources\truksPics\Bild8.jpg" />
+    <Content Include="resources\truksPics\Bild9.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
