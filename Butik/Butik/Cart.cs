@@ -142,7 +142,7 @@ namespace Butik
             t.Text = "";
         }
 
-        private static void PlaceOrderButtonClick(object sender, EventArgs e)
+        private static void PlaceOrderButtonClick(object sender1, EventArgs e1)
         {
             string receipt = "";
             int totalPrice = 0;
@@ -154,7 +154,7 @@ namespace Butik
             receipt += "\r\n Total price: $" + totalPrice;
 
             DialogResult result = MessageBox.Show(
-                    receipt,
+                    receipt + "\r\n \r\n Would you like to print your receipt?",
                     "Receipt",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question,
@@ -165,9 +165,9 @@ namespace Butik
             {
                 PrintDocument p = new PrintDocument() { DocumentName = "Receipt from the Monster Bay" };
                 PrintDialog printDialog = new PrintDialog() { Document = p };
-                p.PrintPage += delegate (object sender2, PrintPageEventArgs e1)
+                p.PrintPage += delegate (object sender2, PrintPageEventArgs e2)
                 {
-                    e1.Graphics.DrawString(receipt, new Font("Arial", 12), new SolidBrush(Color.Black),
+                    e2.Graphics.DrawString(receipt, new Font("Arial", 12), new SolidBrush(Color.Black),
                         new RectangleF(50, 50, p.DefaultPageSettings.PrintableArea.Width, p.DefaultPageSettings.PrintableArea.Height));
                 };
                 DialogResult printResult = printDialog.ShowDialog();
