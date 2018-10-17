@@ -18,6 +18,7 @@ namespace Butik
             Text = "the Monsters Bay";
             Icon = new Icon("resources/icon.ico");
             BackColor = Color.White;
+            MinimumSize = new Size(520, 300);
 
             TableLayoutPanel mainPanel = new TableLayoutPanel()
             {
@@ -51,6 +52,8 @@ namespace Butik
             mainPanel.Controls.Add(new MonsterBay());
             
             mainPanel.Controls.Add(new Cart());
+
+            
         }
     }
 }
