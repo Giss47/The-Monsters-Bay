@@ -14,6 +14,7 @@ namespace Butik
         public MyForm()
         {
             MaximumSize = new Size(1300, 675);
+            MinimumSize = new Size(570, 280);
             Width = 1300;
             Height = 675;
             Text = "The Monsters Bay";
