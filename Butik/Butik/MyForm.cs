@@ -13,12 +13,13 @@ namespace Butik
     {
         public MyForm()
         {
-            Width = 1000;
-            Height = 650;
-            Text = "the Monsters Bay";
+            MaximumSize = new Size(1300, 675);
+            Width = 1300;
+            Height = 675;
+            Text = "The Monsters Bay";
             Icon = new Icon("resources/icon.ico");
             BackColor = Color.White;
-            MinimumSize = new Size(520, 300);
+            StartPosition = FormStartPosition.CenterScreen;
 
             TableLayoutPanel mainPanel = new TableLayoutPanel()
             {
@@ -35,7 +36,7 @@ namespace Butik
             {
                 Font = new Font("Arial", 18),
                 TextAlign = ContentAlignment.MiddleLeft,
-                Text = "the Monster Bay",
+                Text = "Welcome to \"The Monsters Bay\"",
                 Dock = DockStyle.Fill
             };
             mainPanel.Controls.Add(titleLabel);
@@ -44,13 +45,13 @@ namespace Butik
             {
                 Font = new Font("Arial", 14),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Text = "the Shopping Cart",
+                Text = "The Shopping Cart",
                 Dock = DockStyle.Fill
             };
             mainPanel.Controls.Add(cartLabel);
-            
+
             mainPanel.Controls.Add(new MonsterBay());
-            
+
             mainPanel.Controls.Add(Cart.GetPanel());
 
             
