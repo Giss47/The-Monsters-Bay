@@ -62,11 +62,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Trucks.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="resources\backgrounds\2001.png" />
     <Content Include="resources\icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\tucksPics\Bild1.jpg" />
+    <Content Include="resources\tucksPics\Bild10.jpg" />
+    <Content Include="resources\tucksPics\Bild11.jpg" />
+    <Content Include="resources\tucksPics\Bild12.jpg" />
+    <Content Include="resources\tucksPics\Bild2.jpg" />
+    <Content Include="resources\tucksPics\Bild3.jpg" />
+    <Content Include="resources\tucksPics\Bild4.jpg" />
+    <Content Include="resources\tucksPics\Bild5.jpg" />
+    <Content Include="resources\tucksPics\Bild6.jpg" />
+    <Content Include="resources\tucksPics\Bild7.jpg" />
+    <Content Include="resources\tucksPics\Bild8.jpg" />
+    <Content Include="resources\tucksPics\Bild9.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
