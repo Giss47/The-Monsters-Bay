@@ -9,19 +9,116 @@ using System.Drawing.Printing;
 
 namespace Butik
 {
-    class Cart : TableLayoutPanel
+    class Cart
     {
-        public Cart()
+        public static TableLayoutPanel GetPanel()
         {
-            Dock = DockStyle.Fill;
-            CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
+            TableLayoutPanel panel = new TableLayoutPanel()
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 3,
+                RowCount = 5
+            };
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+
+            Label productLabel = new Label()
+            {
+                Font = new Font("Arial", 12),
+                TextAlign = ContentAlignment.MiddleLeft,
+                Text = "Products:",
+                Dock = DockStyle.Fill
+            };
+            panel.Controls.Add(productLabel);
+
+            
+            Label costLabel = new Label()
+            {
+                Font = new Font("Arial", 12),
+                TextAlign = ContentAlignment.MiddleRight,
+                Text = "Cost:",
+                Dock = DockStyle.Fill
+            };
+            panel.SetCellPosition(costLabel, new TableLayoutPanelCellPosition(2, 0));
+            panel.Controls.Add(costLabel);
+
+            Label totalCostLabel = new Label()
+            {
+                Font = new Font("Arial", 12),
+                TextAlign = ContentAlignment.MiddleRight,
+                Text = "Total cost:",
+                Dock = DockStyle.Fill
+            };
+            panel.SetCellPosition(totalCostLabel, new TableLayoutPanelCellPosition(1, 2));
+            panel.Controls.Add(totalCostLabel);
+
+            Label priceLabel = new Label()
+            {
+                Font = new Font("Arial", 12),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Text = "$4.567",
+                Dock = DockStyle.Fill
+            };
+            panel.SetCellPosition(priceLabel, new TableLayoutPanelCellPosition(2, 2));
+            panel.Controls.Add(priceLabel);
+
+            TextBox discountTextBox = new TextBox()
+            {
+                Text = "Enter discount code here...",
+                Dock = DockStyle.Fill
+            };
+            discountTextBox.Click += DiscountTextBoxClick;
+            panel.SetColumnSpan(discountTextBox, 2);
+            panel.SetCellPosition(discountTextBox, new TableLayoutPanelCellPosition(0, 3));
+            panel.Controls.Add(discountTextBox);
+
+            Button discountButton = new Button()
+            {
+                Text = "Submit",
+                Dock = DockStyle.Fill,
+                Cursor = Cursors.Hand
+            };
+            panel.SetCellPosition(discountButton, new TableLayoutPanelCellPosition(3, 3));
+            panel.Controls.Add(discountButton);
+
+            Button clearCartButton = new Button()
+            {
+                Text = "Clear cart",
+                Dock = DockStyle.Fill,
+                Cursor = Cursors.Hand
+            };
+            panel.SetCellPosition(clearCartButton, new TableLayoutPanelCellPosition(0, 4));
+            panel.Controls.Add(clearCartButton);
+
+            Button placeOrderButton = new Button()
+            {
+                Text = "Place order",
+                Dock = DockStyle.Fill,
+                Cursor = Cursors.Hand
+            };
+            placeOrderButton.Click += PlaceOrderButtonClick;
+            panel.SetCellPosition(placeOrderButton, new TableLayoutPanelCellPosition(1, 4));
+            panel.SetColumnSpan(placeOrderButton, 2);
+            panel.Controls.Add(placeOrderButton);
+
+
+
+            return panel;
         }
 
+        private static void DiscountTextBoxClick(object sender, EventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            t.Text = "";
+        }
 
-
-        // Följande kod öppnar en messagebox med kvitto (ej specificerat än) och låter en
-        // välja om man vill skriva ut eller ej.
-        private void PlaceOrderButtonClick(object sender, EventArgs e)
+        private static void PlaceOrderButtonClick(object sender, EventArgs e)
         {
             string receipt = "This is your receipt.\r\n" +
                 "You bought some stuff.\r\n" +

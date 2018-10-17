@@ -51,7 +51,7 @@ namespace Butik
             
             mainPanel.Controls.Add(new MonsterBay());
             
-            mainPanel.Controls.Add(new Cart());
+            mainPanel.Controls.Add(Cart.GetPanel());
 
             
         }
