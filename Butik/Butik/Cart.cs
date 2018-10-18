@@ -14,7 +14,7 @@ namespace Butik
         public string Name { get; private set; }
         public int Price { get; private set; }
         public int Quantity { get; private set; }
-
+        
         public ProductTest(string name, int price, int quantity)
         {
             Name = name;
@@ -25,13 +25,13 @@ namespace Butik
 
     class Cart
     {
-        static List<ProductTest> cart = new List<ProductTest> {
-            new ProductTest("Tesp Produkt 1", 399, 1),
-            new ProductTest("Tesp Produkt 2", 456, 1),
-            new ProductTest("Tesp Produkt 3", 324, 1),
-            new ProductTest("Tesp Produkt 4", 678, 1),
-            new ProductTest("Tesp Produkt 5", 987, 1)
-        };
+        static List<ProductTest> cartTest = new List<ProductTest> { };
+
+        static List<Product> cart = new List<Product> { };
+
+        static Label priceLabel;
+
+        static double totalCost;
 
         public static TableLayoutPanel GetPanel()
         {
@@ -79,10 +79,8 @@ namespace Butik
             };
             panel.SetCellPosition(totalCostLabel, new TableLayoutPanelCellPosition(1, 2));
             panel.Controls.Add(totalCostLabel);
-
-            int totalCost = 0;
-            cart.ForEach(p => totalCost += p.Price);
-            Label priceLabel = new Label()
+            
+            priceLabel = new Label()
             {
                 Font = new Font("Arial", 12),
                 TextAlign = ContentAlignment.MiddleCenter,
@@ -130,10 +128,15 @@ namespace Butik
             panel.SetCellPosition(placeOrderButton, new TableLayoutPanelCellPosition(1, 4));
             panel.SetColumnSpan(placeOrderButton, 2);
             panel.Controls.Add(placeOrderButton);
-
-
-
+            
             return panel;
+        }
+
+        public static void AddProduct(Product product)
+        {
+            cart.Add(product);
+            totalCost += product.Price;
+            priceLabel.Text = "$" + totalCost;
         }
 
         private static void DiscountTextBoxClick(object sender, EventArgs e)
@@ -145,13 +148,11 @@ namespace Butik
         private static void PlaceOrderButtonClick(object sender1, EventArgs e1)
         {
             string receipt = "";
-            int totalPrice = 0;
-            foreach (ProductTest p in cart)
+            foreach (Product p in cart)
             {
                 receipt += string.Format("{0} x {1} (${2}) \r\n", p.Quantity, p.Name, p.Price);
-                totalPrice += p.Price;
             }
-            receipt += "\r\n Total price: $" + totalPrice;
+            receipt += "\r\n Total price: $" + totalCost;
 
             DialogResult result = MessageBox.Show(
                     receipt + "\r\n \r\n Would you like to print your receipt?",

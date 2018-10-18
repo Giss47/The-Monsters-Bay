@@ -9,35 +9,32 @@ using System.IO;
 
 namespace Butik
 {
-    class MonsterBay : FlowLayoutPanel
+    static class MonsterBay
     {
-        public MonsterBay()
+        static string[] products = File.ReadAllLines("Trucks.csv");
+        static List<Product> productList = new List<Product> { };
+
+        public static FlowLayoutPanel GetPanel()
         {
-            Dock = DockStyle.Fill;
-            BorderStyle = BorderStyle.FixedSingle;
-            AutoSize = true;
-            BackgroundImage = Image.FromFile(@"resources\backgrounds\2001.png");
-            BackgroundImageLayout = ImageLayout.Stretch;
-
-
-            ToolTip popUp = new ToolTip();
-            string[] pics = Directory.GetFiles(@"resources\truckPics\", "*.jpg")
-                                      .Select(Path.GetFileName)
-                                      .ToArray();
-
-            for (int i = 1; i < pics.Length + 1; i++)
+            foreach (string s in products)
             {
-                PictureBox picture = new PictureBox
-                {
-                    SizeMode = PictureBoxSizeMode.StretchImage,
-                    Image = Image.FromFile(string.Format(@"resources\truckPics\Bild{0}.jpg", i)),
-                    Size = new Size(200, 150),
-                    Margin = new Padding(20),
-                    Cursor = Cursors.Hand
-                };
-                Controls.Add(picture);
-                popUp.SetToolTip(picture, "Click to view details");
+                string[] p = s.Split(';');
+                productList.Add(new Product(p[0], int.Parse(p[1]), p[2], Image.FromFile("resources/truckPics/" + p[3])));
             }
+
+            FlowLayoutPanel panel = new FlowLayoutPanel()
+            {
+                Dock = DockStyle.Fill,
+                BorderStyle = BorderStyle.FixedSingle,
+                AutoSize = true,
+                BackgroundImage = Image.FromFile(@"resources\backgrounds\2001.png"),
+                BackgroundImageLayout = ImageLayout.Stretch,
+            };
+            
+            productList.ForEach(p => panel.Controls.Add(p.GetPictureBox()));
+
+
+            return panel;
         }
     }
 }

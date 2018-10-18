@@ -11,6 +11,9 @@ namespace Butik
 {
     class MyForm : Form
     {
+        static TableLayoutPanel mainPanel;
+        static FlowLayoutPanel panel1;
+
         public MyForm()
         {
             MaximumSize = new Size(1300, 675);
@@ -22,7 +25,7 @@ namespace Butik
             BackColor = Color.White;
             StartPosition = FormStartPosition.CenterScreen;
 
-            TableLayoutPanel mainPanel = new TableLayoutPanel()
+            mainPanel = new TableLayoutPanel()
             {
                 Dock = DockStyle.Fill,
                 ColumnCount = 2,
@@ -51,14 +54,24 @@ namespace Butik
             };
             mainPanel.Controls.Add(cartLabel);
 
-            mainPanel.Controls.Add(new MonsterBay());
+            panel1 = MonsterBay.GetPanel();
+            mainPanel.Controls.Add(panel1);
 
             mainPanel.Controls.Add(Cart.GetPanel());
 
             FormClosing += MyForm_FormClosing;
-
-
+            
         }
+
+        public static void ChangePanel(FlowLayoutPanel newPanel)
+        {
+            mainPanel.Controls.Remove(panel1);
+            panel1 = newPanel;
+            mainPanel.SetCellPosition(panel1, new TableLayoutPanelCellPosition(0, 1));
+            mainPanel.Controls.Add(panel1);
+        }
+
+
 
         private void MyForm_FormClosing(object sender, FormClosingEventArgs e)
         {
