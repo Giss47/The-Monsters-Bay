@@ -15,15 +15,16 @@ namespace Butik
         public string Name { get; private set; }
         public double Price { get; private set; }
         public string Description { get; private set; }
-        public Image Image { get; private set; }
+        public string ImageLocation { get; private set; }
         public int Quantity { get; private set; }
 
-        public Product(string name, int price, string description, Image image)
+        public Product(string name, int price, string description, string image, int quantity = 1)
         {
             Name = name;
             Price = price;
             Description = description;
-            Image = image;
+            ImageLocation = image;
+            Quantity = quantity;
         }
 
         public FlowLayoutPanel GetInfoPanel()
@@ -33,7 +34,7 @@ namespace Butik
                 Dock = DockStyle.Fill,
                 AutoSize = true
             };
-            panel.Controls.Add(new PictureBox { Image = Image, Size = new Size(400, 400), SizeMode = PictureBoxSizeMode.StretchImage });
+            panel.Controls.Add(new PictureBox { Image = Image.FromFile(ImageLocation), Size = new Size(400, 400), SizeMode = PictureBoxSizeMode.StretchImage });
 
             TableLayoutPanel table = new TableLayoutPanel()
             {
@@ -92,7 +93,7 @@ namespace Butik
             PictureBox box = new PictureBox()
             {
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Image = Image,
+                Image = Image.FromFile(ImageLocation),
                 Size = new Size(200, 150),
                 Margin = new Padding(20),
                 Cursor = Cursors.Hand

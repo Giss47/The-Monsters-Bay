@@ -19,7 +19,7 @@ namespace Butik
             foreach (string s in products)
             {
                 string[] p = s.Split(';');
-                productList.Add(new Product(p[0], int.Parse(p[1]), p[2], Image.FromFile("resources/truckPics/" + p[3])));
+                productList.Add(new Product(p[0], int.Parse(p[1]), p[2], p[3]));
             }
 
             FlowLayoutPanel panel = new FlowLayoutPanel()

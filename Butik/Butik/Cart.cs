@@ -6,35 +6,34 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Printing;
+using System.IO;
 
 namespace Butik
 {
-    class ProductTest
-    {
-        public string Name { get; private set; }
-        public int Price { get; private set; }
-        public int Quantity { get; private set; }
-        
-        public ProductTest(string name, int price, int quantity)
-        {
-            Name = name;
-            Price = price;
-            Quantity = quantity;
-        }
-    }
-
     class Cart
     {
-        static List<ProductTest> cartTest = new List<ProductTest> { };
-
         static List<Product> cart = new List<Product> { };
 
         static Label priceLabel;
 
         static double totalCost;
 
+        static string cartFile = @"C:\Windows\Temp\cart.mbc";
+
         public static TableLayoutPanel GetPanel()
         {
+            if (File.Exists(cartFile))
+            {
+                string[] temp = File.ReadAllLines(cartFile);
+
+                foreach (string s in temp)
+                {
+                    string[] p = s.Split(';');
+                    cart.Add(new Product(p[0], int.Parse(p[1]), p[2], p[3], int.Parse(p[4])));
+                    totalCost += double.Parse(p[1]);
+                }
+            }
+
             TableLayoutPanel panel = new TableLayoutPanel()
             {
                 Dock = DockStyle.Fill,
@@ -115,6 +114,7 @@ namespace Butik
                 Dock = DockStyle.Fill,
                 Cursor = Cursors.Hand
             };
+            clearCartButton.Click += ClearCart;
             panel.SetCellPosition(clearCartButton, new TableLayoutPanelCellPosition(0, 4));
             panel.Controls.Add(clearCartButton);
 
@@ -125,6 +125,7 @@ namespace Butik
                 Cursor = Cursors.Hand
             };
             placeOrderButton.Click += PlaceOrderButtonClick;
+            placeOrderButton.Click += ClearCart;
             panel.SetCellPosition(placeOrderButton, new TableLayoutPanelCellPosition(1, 4));
             panel.SetColumnSpan(placeOrderButton, 2);
             panel.Controls.Add(placeOrderButton);
@@ -135,8 +136,27 @@ namespace Butik
         public static void AddProduct(Product product)
         {
             cart.Add(product);
+            SaveToFile();
             totalCost += product.Price;
             priceLabel.Text = "$" + totalCost;
+        }
+
+        public static void ClearCart(object sender, EventArgs e)
+        {
+            cart.Clear();
+            totalCost = 0;
+            priceLabel.Text = "$" + totalCost;
+            if (File.Exists(cartFile))
+            {
+                File.Delete(cartFile);
+            }
+        }
+
+        public static void SaveToFile()
+        {
+            List<string> cartString = new List<string> { };
+            cart.ForEach(p => cartString.Add(p.Name + ";" + p.Price + ";" + p.Description + ";" + p.ImageLocation + ";" + p.Quantity));
+            File.WriteAllLines(@"C:\Windows\Temp\cart.mbc", cartString);
         }
 
         private static void DiscountTextBoxClick(object sender, EventArgs e)
