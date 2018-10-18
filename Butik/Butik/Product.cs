@@ -118,6 +118,9 @@ namespace Butik
             return box;
         }
 
-       
+        public void ChangeQuantity(int change)
+        {
+            Quantity += change;
+        }
     }
 }

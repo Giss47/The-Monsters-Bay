@@ -183,7 +183,14 @@ namespace Butik
 
         public static void AddProduct(Product product)
         {
-            cart.Add(product);
+            if (cart.Contains(product))
+            {
+                product.ChangeQuantity(1);
+            }
+            else
+            {
+                cart.Add(product);
+            }
             SaveToFile();
             totalCost += product.Price;
             priceLabel.Text = "$" + totalCost;
@@ -213,38 +220,54 @@ namespace Butik
             t.Text = "";
         }
 
-        private static void PlaceOrderButtonClick(object sender1, EventArgs e1)
+        private static void PlaceOrderButtonClick(object sender, EventArgs e1)
         {
-            string receipt = "";
-            foreach (Product p in cart)
+            if (cart.Count != 0)
             {
-                receipt += string.Format("{0} x {1} (${2}) \r\n", p.Quantity, p.Name, p.Price);
-            }
-            receipt += "\r\n Total price: $" + totalCost;
 
-            DialogResult result = MessageBox.Show(
-                    receipt + "\r\n \r\n Would you like to print your receipt?",
-                    "Receipt",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button1
-                    );
-
-            if (result == DialogResult.Yes)
-            {
-                PrintDocument p = new PrintDocument() { DocumentName = "Receipt from the Monster Bay" };
-                PrintDialog printDialog = new PrintDialog() { Document = p };
-                p.PrintPage += delegate (object sender2, PrintPageEventArgs e2)
+                string receipt = "Your order has been placed.\r\n" +
+                    "\r\n\r\n" +
+                    "Qty:\tProduct\t\tUnit price:\tAmount:\r\n";
+                foreach (Product p in cart)
                 {
-                    e2.Graphics.DrawString(receipt, new Font("Arial", 12), new SolidBrush(Color.Black),
-                        new RectangleF(50, 50, p.DefaultPageSettings.PrintableArea.Width, p.DefaultPageSettings.PrintableArea.Height));
-                };
-                DialogResult printResult = printDialog.ShowDialog();
-
-                if (printResult == DialogResult.OK)
-                {
-                    p.Print();
+                    string doubleTab = "\t";
+                    if (p.Name.Length < 8)
+                        doubleTab = "\t\t";
+                    receipt += string.Format("{0}\t{1}" + doubleTab + "${2}\t\t{3}\r\n", p.Quantity, p.Name, p.Price, p.Price*p.Quantity);
                 }
+                receipt += "\r\n \t\t\tTotal price: $" + totalCost;
+
+                DialogResult result = MessageBox.Show(
+                        receipt + "\r\n \r\n Would you like to print the receipt?",
+                        "Receipt",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button1
+                        );
+
+                if (result == DialogResult.Yes)
+                {
+                    PrintDocument p = new PrintDocument() { DocumentName = "Receipt from the Monster Bay" };
+                    PrintDialog printDialog = new PrintDialog() { Document = p };
+                    p.PrintPage += delegate (object sender2, PrintPageEventArgs e2)
+                    {
+                        e2.Graphics.DrawString(receipt, new Font("Arial", 12), new SolidBrush(Color.Black),
+                            new RectangleF(50, 50, p.DefaultPageSettings.PrintableArea.Width, p.DefaultPageSettings.PrintableArea.Height));
+                    };
+                    DialogResult printResult = printDialog.ShowDialog();
+
+                    if (printResult == DialogResult.OK)
+                    {
+                        p.Print();
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("You have no products in your cart!",
+                    "Empty cart",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
     }
