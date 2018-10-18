@@ -71,6 +71,7 @@
     <Content Include="resources\backgrounds\2001.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\backgrounds\secondWindow.jpg" />
     <Content Include="resources\icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
