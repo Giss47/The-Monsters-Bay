@@ -59,6 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="DiscountList.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Trucks.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

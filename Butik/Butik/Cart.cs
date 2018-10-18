@@ -13,10 +13,14 @@ namespace Butik
     class Cart
     {
         static List<Product> cart = new List<Product> { };
+        static Dictionary<string, double> discountCodes = new Dictionary<string, double> { };
+        static TextBox discountTextBox;
 
         static Label priceLabel;
+        static Label discountLabel;
 
         static double totalCost;
+        static double totalDiscount;
 
         static string cartFile = @"C:\Windows\Temp\cart.mbc";
 
@@ -33,18 +37,26 @@ namespace Butik
                     totalCost += double.Parse(p[1]);
                 }
             }
+            string[] getDiscountCodes = File.ReadAllLines("DiscountList.csv");
+            foreach (var item in getDiscountCodes)
+            {
+                string[] parts = item.Split(',');
+                discountCodes.Add(parts[0], int.Parse(parts[1]));
+            }
+
 
             TableLayoutPanel panel = new TableLayoutPanel()
             {
                 Dock = DockStyle.Fill,
                 ColumnCount = 3,
-                RowCount = 5
+                RowCount = 6
             };
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
@@ -58,7 +70,7 @@ namespace Butik
             };
             panel.Controls.Add(productLabel);
 
-            
+
             Label costLabel = new Label()
             {
                 Font = new Font("Arial", 12),
@@ -69,6 +81,27 @@ namespace Butik
             panel.SetCellPosition(costLabel, new TableLayoutPanelCellPosition(2, 0));
             panel.Controls.Add(costLabel);
 
+            Label discoutLabelText = new Label()
+            {
+                Font = new Font("Arial", 12),
+                TextAlign = ContentAlignment.MiddleRight,
+                Text = "Discount:",
+                Dock = DockStyle.Fill
+            };
+            panel.SetCellPosition(discoutLabelText, new TableLayoutPanelCellPosition(1, 2));
+            panel.Controls.Add(discoutLabelText);
+
+            discountLabel = new Label()
+            {
+                Font = new Font("Arial", 12),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Text = "$" + totalDiscount,
+                Dock = DockStyle.Fill,
+                ForeColor = Color.Red
+            };
+            panel.SetCellPosition(discountLabel, new TableLayoutPanelCellPosition(2, 2));
+            panel.Controls.Add(discountLabel);
+
             Label totalCostLabel = new Label()
             {
                 Font = new Font("Arial", 12),
@@ -76,9 +109,9 @@ namespace Butik
                 Text = "Total cost:",
                 Dock = DockStyle.Fill
             };
-            panel.SetCellPosition(totalCostLabel, new TableLayoutPanelCellPosition(1, 2));
+            panel.SetCellPosition(totalCostLabel, new TableLayoutPanelCellPosition(1, 3));
             panel.Controls.Add(totalCostLabel);
-            
+
             priceLabel = new Label()
             {
                 Font = new Font("Arial", 12),
@@ -86,17 +119,17 @@ namespace Butik
                 Text = "$" + totalCost,
                 Dock = DockStyle.Fill
             };
-            panel.SetCellPosition(priceLabel, new TableLayoutPanelCellPosition(2, 2));
+            panel.SetCellPosition(priceLabel, new TableLayoutPanelCellPosition(2, 3));
             panel.Controls.Add(priceLabel);
 
-            TextBox discountTextBox = new TextBox()
+            discountTextBox = new TextBox()
             {
                 Text = "Enter discount code here...",
                 Dock = DockStyle.Fill
             };
             discountTextBox.Click += DiscountTextBoxClick;
             panel.SetColumnSpan(discountTextBox, 2);
-            panel.SetCellPosition(discountTextBox, new TableLayoutPanelCellPosition(0, 3));
+            panel.SetCellPosition(discountTextBox, new TableLayoutPanelCellPosition(0, 4));
             panel.Controls.Add(discountTextBox);
 
             Button discountButton = new Button()
@@ -105,7 +138,8 @@ namespace Butik
                 Dock = DockStyle.Fill,
                 Cursor = Cursors.Hand
             };
-            panel.SetCellPosition(discountButton, new TableLayoutPanelCellPosition(3, 3));
+            discountButton.Click += DiscountButtonClick;
+            panel.SetCellPosition(discountButton, new TableLayoutPanelCellPosition(3, 4));
             panel.Controls.Add(discountButton);
 
             Button clearCartButton = new Button()
@@ -115,7 +149,7 @@ namespace Butik
                 Cursor = Cursors.Hand
             };
             clearCartButton.Click += ClearCart;
-            panel.SetCellPosition(clearCartButton, new TableLayoutPanelCellPosition(0, 4));
+            panel.SetCellPosition(clearCartButton, new TableLayoutPanelCellPosition(0, 5));
             panel.Controls.Add(clearCartButton);
 
             Button placeOrderButton = new Button()
@@ -126,11 +160,25 @@ namespace Butik
             };
             placeOrderButton.Click += PlaceOrderButtonClick;
             placeOrderButton.Click += ClearCart;
-            panel.SetCellPosition(placeOrderButton, new TableLayoutPanelCellPosition(1, 4));
+            panel.SetCellPosition(placeOrderButton, new TableLayoutPanelCellPosition(1, 5));
             panel.SetColumnSpan(placeOrderButton, 2);
             panel.Controls.Add(placeOrderButton);
-            
+
             return panel;
+        }
+
+        private static void DiscountButtonClick(object sender, EventArgs e)
+        {
+            foreach (KeyValuePair<string, double> pair in discountCodes)
+            {
+                if(discountTextBox.Text == pair.Key)
+                {
+                    totalDiscount = totalCost * (pair.Value / 100);
+                    totalCost -= totalDiscount;
+                    priceLabel.Text = "$" + totalCost;
+                    discountLabel.Text = "-$" + totalDiscount;
+                }
+            }
         }
 
         public static void AddProduct(Product product)
