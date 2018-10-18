@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Butik
 {
-    // Jag tror vi behöver skapa objekt av samtliga produkter, därav påbörjade jag en ny klass, men vi kan prata om det imorgn. /Jocke
+    
 
     class Product
     {
@@ -29,31 +29,35 @@ namespace Butik
 
         public FlowLayoutPanel GetInfoPanel()
         {
+            
             FlowLayoutPanel panel = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
-                AutoSize = true
+                AutoSize = true,
+                BackColor = Color.Bisque
+
             };
-            panel.Controls.Add(new PictureBox { Image = Image.FromFile(ImageLocation), Size = new Size(400, 400), SizeMode = PictureBoxSizeMode.StretchImage });
+            panel.Controls.Add(new PictureBox { Image = Image.FromFile(ImageLocation), Size = new Size(600, 550), SizeMode = PictureBoxSizeMode.StretchImage });
 
             TableLayoutPanel table = new TableLayoutPanel()
             {
                 ColumnCount = 2,
-                RowCount = 3,
+                RowCount = 4,
                 Dock = DockStyle.Fill
             };
             panel.Controls.Add(table);
 
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
-            table.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 350));
+            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
             table.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
 
             Label title = new Label()
             {
                 Text = Name,
-                Font = new Font("Arial", 16),
+                Font = new Font("Arial", 17),
                 AutoSize = true
             };
             table.Controls.Add(title);
@@ -62,11 +66,18 @@ namespace Butik
             Label description = new Label()
             {
                 Text = Description,
-                Font = new Font("Arial", 12),
+                Font = new Font("Arial", 17),
                 AutoSize = true
             };
             table.Controls.Add(description);
             table.SetColumnSpan(description, 2);
+
+            Label priceLabel = new Label { Text = "$" + Price.ToString(),
+                                           Font = new Font("Arial", 15),
+                                           ImageAlign = ContentAlignment.MiddleCenter
+                                          };
+            table.Controls.Add(priceLabel);
+            table.SetColumnSpan(priceLabel, 2);
 
             Button back = new Button()
             {
