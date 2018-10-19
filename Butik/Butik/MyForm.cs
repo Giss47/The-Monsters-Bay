@@ -34,6 +34,7 @@ namespace Butik
             mainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             mainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
             mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+            mainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             Controls.Add(mainPanel);
 
             Label titleLabel = new Label()
@@ -60,7 +61,7 @@ namespace Butik
             mainPanel.Controls.Add(Cart.GetPanel());
 
             FormClosing += MyForm_FormClosing;
-            
+
         }
 
         public static void ChangePanel(FlowLayoutPanel newPanel)
@@ -75,15 +76,14 @@ namespace Butik
 
         private void MyForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            string message =
-                 "Are you sure  you would like to exit The Monsters Bay?";
+            string message = "Are you sure  you would like to exit The Monsters Bay?";
             string caption = "Exit";
             var result = MessageBox.Show(message, caption,
                                          MessageBoxButtons.YesNo,
-                                         MessageBoxIcon.Question);           
-            if (result == DialogResult.No)                     
+                                         MessageBoxIcon.Question);
+            if (result == DialogResult.No)
                 e.Cancel = true;
-            
+
         }
     }
 }

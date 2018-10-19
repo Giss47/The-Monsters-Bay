@@ -176,7 +176,7 @@ namespace Butik
                     totalDiscount = totalCost * (pair.Value / 100);
                     totalCost -= totalDiscount;
                     priceLabel.Text = "$" + totalCost;
-                    discountLabel.Text = "-$" + totalDiscount;
+                    discountLabel.Text = "-$" + totalDiscount;                   
                 }
             }
         }
@@ -200,7 +200,9 @@ namespace Butik
         {
             cart.Clear();
             totalCost = 0;
+            totalDiscount = 0;
             priceLabel.Text = "$" + totalCost;
+            discountLabel.Text = "$" + totalDiscount;
             if (File.Exists(cartFile))
             {
                 File.Delete(cartFile);
