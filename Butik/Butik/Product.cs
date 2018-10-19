@@ -34,10 +34,10 @@ namespace Butik
             {
                 Dock = DockStyle.Fill,
                 AutoSize = true,                
-                BackgroundImage = Image.FromFile(@"resources\backgrounds\secondWindow.jpg")
+                BackgroundImage = Image.FromFile(@"resources\backgrounds\secondWindow.jpg"),               
 
             };
-            panel.Controls.Add(new PictureBox { Image = Image.FromFile(ImageLocation), Size = new Size(600, 550), SizeMode = PictureBoxSizeMode.StretchImage });
+            panel.Controls.Add(new PictureBox { Image = Image.FromFile(ImageLocation), Size = new Size(590, 540), SizeMode = PictureBoxSizeMode.StretchImage, Margin = new Padding(10) });
 
             TableLayoutPanel table = new TableLayoutPanel()
             {
@@ -50,8 +50,8 @@ namespace Butik
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             table.RowStyles.Add(new RowStyle(SizeType.Absolute, 100));
-            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 350));
-            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 300));
+            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 100));
             table.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             table.Size = new Size(350, 300);
             table.BackColor = Color.Transparent;
@@ -83,7 +83,7 @@ namespace Butik
             Label priceLabel = new Label
             {
                 Text = "$" + Price.ToString(),
-                Font = new Font("Arial", 15),
+                Font = new Font("Arial", 30),
                 TextAlign = ContentAlignment.MiddleCenter,
                 AutoSize = true,
                 Dock = DockStyle.Fill,
@@ -96,7 +96,7 @@ namespace Butik
             Button back = new Button()
             {
                 Text = "Back",
-                AutoSize = true
+                Size = new Size(200,50)
             };
             back.Click += (s, e) => { MyForm.ChangePanel(MonsterBay.GetPanel()); };
             table.Controls.Add(back);
@@ -104,7 +104,7 @@ namespace Butik
             Button addToCart = new Button()
             {
                 Text = "Add to cart",
-                AutoSize = true
+                Size = new Size(200, 50)               
             };
             addToCart.Click += (s, e) => { Cart.AddProduct(this); };
             table.Controls.Add(addToCart);
