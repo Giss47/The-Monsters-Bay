@@ -229,7 +229,7 @@ namespace Butik
         {
             List<string> cartString = new List<string> { };
             cart.ForEach(p => cartString.Add(p.Name + ";" + p.Price + ";" + p.Description + ";" + p.ImageLocation + ";" + p.Quantity));
-            File.WriteAllLines(@"C:\Windows\Temp\cart.mbc", cartString);
+            File.WriteAllLines(cartFile, cartString);
         }
 
         private static void DiscountTextBoxClick(object sender, EventArgs e)
