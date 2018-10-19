@@ -12,17 +12,16 @@ namespace Butik
 {
     class Cart
     {
-        static List<Product> cart = new List<Product> { };
-        static Dictionary<string, double> discountCodes = new Dictionary<string, double> { };
-        static TextBox discountTextBox;
+        private static List<Product> cart = new List<Product> { };
+        private static Dictionary<string, double> discountCodes = new Dictionary<string, double> { };
 
-        static Label priceLabel;
-        static Label discountLabel;
+        private static TextBox discountTextBox;
+        private static Label priceLabel;
+        private static Label discountLabel;
 
-        static double totalCost;
-        static double totalDiscount;
-
-        static string cartFile = @"C:\Windows\Temp\cart.mbc";
+        private static double totalCost;
+        private static double totalDiscount;
+        private static string cartFile = @"C:\Windows\Temp\cart.mbc";
 
         public static TableLayoutPanel GetPanel()
         {
@@ -61,64 +60,26 @@ namespace Butik
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
 
-            Label productLabel = new Label()
-            {
-                Font = new Font("Arial", 12),
-                TextAlign = ContentAlignment.MiddleLeft,
-                Text = "Products:",
-                Dock = DockStyle.Fill
-            };
+            Label productLabel = CreateLabel("Products:", ContentAlignment.MiddleLeft, Color.Black);
             panel.Controls.Add(productLabel);
 
-
-            Label costLabel = new Label()
-            {
-                Font = new Font("Arial", 12),
-                TextAlign = ContentAlignment.MiddleRight,
-                Text = "Cost:",
-                Dock = DockStyle.Fill
-            };
+            Label costLabel = CreateLabel("Cost:", ContentAlignment.MiddleRight, Color.Black);
             panel.SetCellPosition(costLabel, new TableLayoutPanelCellPosition(2, 0));
             panel.Controls.Add(costLabel);
 
-            Label discoutLabelText = new Label()
-            {
-                Font = new Font("Arial", 12),
-                TextAlign = ContentAlignment.MiddleRight,
-                Text = "Discount:",
-                Dock = DockStyle.Fill
-            };
-            panel.SetCellPosition(discoutLabelText, new TableLayoutPanelCellPosition(1, 2));
-            panel.Controls.Add(discoutLabelText);
+            Label discountLabelText = CreateLabel("Discount:", ContentAlignment.MiddleRight, Color.Black);
+            panel.SetCellPosition(discountLabelText, new TableLayoutPanelCellPosition(1, 2));
+            panel.Controls.Add(discountLabelText);
 
-            discountLabel = new Label()
-            {
-                Font = new Font("Arial", 12),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Text = "$" + totalDiscount,
-                Dock = DockStyle.Fill,
-                ForeColor = Color.Red
-            };
+            discountLabel = CreateLabel("$" + totalDiscount, ContentAlignment.MiddleCenter, Color.Red);
             panel.SetCellPosition(discountLabel, new TableLayoutPanelCellPosition(2, 2));
             panel.Controls.Add(discountLabel);
 
-            Label totalCostLabel = new Label()
-            {
-                Font = new Font("Arial", 12),
-                TextAlign = ContentAlignment.MiddleRight,
-                Text = "Total cost:",
-                Dock = DockStyle.Fill
-            };
+            Label totalCostLabel = CreateLabel("Total cost:", ContentAlignment.MiddleRight, Color.Black);
             panel.SetCellPosition(totalCostLabel, new TableLayoutPanelCellPosition(1, 3));
             panel.Controls.Add(totalCostLabel);
 
-            priceLabel = new Label()
-            {
-                Font = new Font("Arial", 12),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Text = "$" + totalCost,
-                Dock = DockStyle.Fill
-            };
+            priceLabel = CreateLabel("$" + totalCost, ContentAlignment.MiddleCenter, Color.Black);
             panel.SetCellPosition(priceLabel, new TableLayoutPanelCellPosition(2, 3));
             panel.Controls.Add(priceLabel);
 
@@ -132,32 +93,17 @@ namespace Butik
             panel.SetCellPosition(discountTextBox, new TableLayoutPanelCellPosition(0, 4));
             panel.Controls.Add(discountTextBox);
 
-            Button discountButton = new Button()
-            {
-                Text = "Submit",
-                Dock = DockStyle.Fill,
-                Cursor = Cursors.Hand
-            };
+            Button discountButton = CreateButton("Submit");
             discountButton.Click += SubmitDiscountButtonClick;
             panel.SetCellPosition(discountButton, new TableLayoutPanelCellPosition(3, 4));
             panel.Controls.Add(discountButton);
 
-            Button clearCartButton = new Button()
-            {
-                Text = "Clear cart",
-                Dock = DockStyle.Fill,
-                Cursor = Cursors.Hand
-            };
+            Button clearCartButton = CreateButton("Clear cart");
             clearCartButton.Click += ClearCart;
             panel.SetCellPosition(clearCartButton, new TableLayoutPanelCellPosition(0, 5));
             panel.Controls.Add(clearCartButton);
 
-            Button placeOrderButton = new Button()
-            {
-                Text = "Place order",
-                Dock = DockStyle.Fill,
-                Cursor = Cursors.Hand
-            };
+            Button placeOrderButton = CreateButton("Place order");
             placeOrderButton.Click += PlaceOrderButtonClick;
             placeOrderButton.Click += ClearCart;
             panel.SetCellPosition(placeOrderButton, new TableLayoutPanelCellPosition(1, 5));
@@ -167,36 +113,29 @@ namespace Butik
             return panel;
         }
 
-        private static void SubmitDiscountButtonClick(object sender, EventArgs e)
+        // Controls methods
+        private static Button CreateButton(string text)
         {
-            double keyCeck = 0;
-            string valueCheck = "";
-
-            foreach (KeyValuePair<string, double> pair in discountCodes)
+            return new Button()
             {
-                if (discountTextBox.Text == pair.Key)
-                {
-                    keyCeck = pair.Value;
-                    valueCheck = pair.Key;
-                }
-            }
-
-            if(keyCeck == 0)
-            {
-                MessageBox.Show("INVALID CODE!\nPlease try again", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-            else
-            {
-                totalDiscount = totalCost * (keyCeck / 100);
-                totalCost -= totalDiscount;
-                priceLabel.Text = "$" + totalCost;
-                discountLabel.Text = "-$" + totalDiscount;
-                string[] temp = File.ReadLines("DiscountList.csv").Where(l => l != $"{keyCeck},{valueCheck}").ToArray();
-                File.WriteAllLines("DiscountList.csv", temp);
-            }
-
+                Text = text,
+                Dock = DockStyle.Fill,
+                Cursor = Cursors.Hand
+            };
         }
-
+        private static Label CreateLabel(string text, ContentAlignment align, Color color)
+        {
+            return new Label()
+            {
+                Font = new Font("Arial", 12),
+                TextAlign = align,
+                Text = text,
+                Dock = DockStyle.Fill,
+                ForeColor = color
+            };
+        }
+        
+        // Operation methods
         public static void AddProduct(Product product)
         {
             if (cart.Contains(product))
@@ -211,8 +150,15 @@ namespace Butik
             totalCost += product.Price;
             priceLabel.Text = "$" + totalCost;
         }
+        private static void SaveToFile()
+        {
+            List<string> cartString = new List<string> { };
+            cart.ForEach(p => cartString.Add(p.Name + ";" + p.Price + ";" + p.Description + ";" + p.ImageLocation + ";" + p.Quantity));
+            File.WriteAllLines(cartFile, cartString);
+        }
 
-        public static void ClearCart(object sender, EventArgs e)
+        // Eventlisteners
+        private static void ClearCart(object sender, EventArgs e)
         {
             cart.Clear();
             totalCost = 0;
@@ -224,20 +170,40 @@ namespace Butik
                 File.Delete(cartFile);
             }
         }
-
-        public static void SaveToFile()
-        {
-            List<string> cartString = new List<string> { };
-            cart.ForEach(p => cartString.Add(p.Name + ";" + p.Price + ";" + p.Description + ";" + p.ImageLocation + ";" + p.Quantity));
-            File.WriteAllLines(cartFile, cartString);
-        }
-
         private static void DiscountTextBoxClick(object sender, EventArgs e)
         {
             TextBox t = (TextBox)sender;
             t.Text = "";
         }
+        private static void SubmitDiscountButtonClick(object sender, EventArgs e)
+        {
+            double keyCeck = 0;
+            string valueCheck = "";
 
+            foreach (KeyValuePair<string, double> pair in discountCodes)
+            {
+                if (discountTextBox.Text == pair.Key)
+                {
+                    keyCeck = pair.Value;
+                    valueCheck = pair.Key;
+                }
+            }
+
+            if (keyCeck == 0)
+            {
+                MessageBox.Show("INVALID CODE!\nPlease try again", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                totalDiscount = totalCost * (keyCeck / 100);
+                totalCost -= totalDiscount;
+                priceLabel.Text = "$" + totalCost;
+                discountLabel.Text = "-$" + totalDiscount;
+                string[] temp = File.ReadLines("DiscountList.csv").Where(l => l != $"{keyCeck},{valueCheck}").ToArray();
+                File.WriteAllLines("DiscountList.csv", temp);
+            }
+
+        }
         private static void PlaceOrderButtonClick(object sender, EventArgs e1)
         {
             if (cart.Count != 0)
