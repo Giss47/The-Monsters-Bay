@@ -53,34 +53,86 @@ namespace Butik
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
-            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
 
-            Label productLabel = CreateLabel("Products:", ContentAlignment.MiddleLeft, Color.Black);
-            panel.Controls.Add(productLabel);
 
-            Label costLabel = CreateLabel("Cost:", ContentAlignment.MiddleRight, Color.Black);
-            panel.SetCellPosition(costLabel, new TableLayoutPanelCellPosition(2, 0));
-            panel.Controls.Add(costLabel);
+            TableLayoutPanel productsList = new TableLayoutPanel
+            {
+                ColumnCount = 3,
+                RowCount = 2 + cart.Count,
+                Dock = DockStyle.Fill,
+                CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset,
+                BackColor = Color.White
+            };
+
+            for (int i = 0; i < 3; i++)
+            {
+                productsList.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35));
+            }
+
+            productsList.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+
+            for (int i = 0; i < cart.Count; i++)
+            {
+                productsList.RowStyles.Add(new RowStyle(SizeType.Absolute, 20));
+            }
+            panel.SetColumnSpan(productsList, 3);
+
+
+            Label productListProduct = new Label
+            {
+                Text = "Product",
+                Dock = DockStyle.Fill,
+                Margin = new Padding(0),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = new Font("Arial", 10),
+                BackColor = Color.WhiteSmoke
+            };
+            Label quantityListProduct = new Label
+            {
+                Text = "Quantity",
+                Dock = DockStyle.Fill,
+                Margin = new Padding(0),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = new Font("Arial", 10),
+                BackColor = Color.WhiteSmoke
+            };
+            Label priceListProduct = new Label
+            {
+                Text = "Price",
+                Dock = DockStyle.Fill,
+                Margin = new Padding(0),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = new Font("Arial", 10),
+                BackColor = Color.WhiteSmoke
+            };
+
+
+            productsList.Controls.Add(productListProduct);
+            productsList.Controls.Add(quantityListProduct);
+            productsList.Controls.Add(priceListProduct);
+            panel.SetCellPosition(productsList, new TableLayoutPanelCellPosition(0, 0));
+            panel.Controls.Add(productsList);
+
 
             Label discountLabelText = CreateLabel("Discount:", ContentAlignment.MiddleRight, Color.Black);
-            panel.SetCellPosition(discountLabelText, new TableLayoutPanelCellPosition(1, 2));
+            panel.SetCellPosition(discountLabelText, new TableLayoutPanelCellPosition(1, 1));
             panel.Controls.Add(discountLabelText);
 
             discountLabel = CreateLabel("$" + totalDiscount, ContentAlignment.MiddleCenter, Color.Red);
-            panel.SetCellPosition(discountLabel, new TableLayoutPanelCellPosition(2, 2));
+            panel.SetCellPosition(discountLabel, new TableLayoutPanelCellPosition(2, 1));
             panel.Controls.Add(discountLabel);
 
             Label totalCostLabel = CreateLabel("Total cost:", ContentAlignment.MiddleRight, Color.Black);
-            panel.SetCellPosition(totalCostLabel, new TableLayoutPanelCellPosition(1, 3));
+            panel.SetCellPosition(totalCostLabel, new TableLayoutPanelCellPosition(1, 2));
             panel.Controls.Add(totalCostLabel);
 
             priceLabel = CreateLabel("$" + totalCost, ContentAlignment.MiddleCenter, Color.Black);
-            panel.SetCellPosition(priceLabel, new TableLayoutPanelCellPosition(2, 3));
+            panel.SetCellPosition(priceLabel, new TableLayoutPanelCellPosition(2, 2));
             panel.Controls.Add(priceLabel);
 
             discountTextBox = new TextBox()
@@ -90,23 +142,23 @@ namespace Butik
             };
             discountTextBox.Click += DiscountTextBoxClick;
             panel.SetColumnSpan(discountTextBox, 2);
-            panel.SetCellPosition(discountTextBox, new TableLayoutPanelCellPosition(0, 4));
+            panel.SetCellPosition(discountTextBox, new TableLayoutPanelCellPosition(0, 3));
             panel.Controls.Add(discountTextBox);
 
             Button discountButton = CreateButton("Submit");
             discountButton.Click += SubmitDiscountButtonClick;
-            panel.SetCellPosition(discountButton, new TableLayoutPanelCellPosition(3, 4));
+            panel.SetCellPosition(discountButton, new TableLayoutPanelCellPosition(3, 3));
             panel.Controls.Add(discountButton);
 
             Button clearCartButton = CreateButton("Clear cart");
             clearCartButton.Click += ClearCart;
-            panel.SetCellPosition(clearCartButton, new TableLayoutPanelCellPosition(0, 5));
+            panel.SetCellPosition(clearCartButton, new TableLayoutPanelCellPosition(0, 4));
             panel.Controls.Add(clearCartButton);
 
             Button placeOrderButton = CreateButton("Place order");
             placeOrderButton.Click += PlaceOrderButtonClick;
             placeOrderButton.Click += ClearCart;
-            panel.SetCellPosition(placeOrderButton, new TableLayoutPanelCellPosition(1, 5));
+            panel.SetCellPosition(placeOrderButton, new TableLayoutPanelCellPosition(1, 4));
             panel.SetColumnSpan(placeOrderButton, 2);
             panel.Controls.Add(placeOrderButton);
 
