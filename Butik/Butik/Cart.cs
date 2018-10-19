@@ -138,7 +138,7 @@ namespace Butik
                 Dock = DockStyle.Fill,
                 Cursor = Cursors.Hand
             };
-            discountButton.Click += DiscountButtonClick;
+            discountButton.Click += SubmitDiscountButtonClick;
             panel.SetCellPosition(discountButton, new TableLayoutPanelCellPosition(3, 4));
             panel.Controls.Add(discountButton);
 
@@ -167,18 +167,34 @@ namespace Butik
             return panel;
         }
 
-        private static void DiscountButtonClick(object sender, EventArgs e)
+        private static void SubmitDiscountButtonClick(object sender, EventArgs e)
         {
+            double keyCeck = 0;
+            string valueCheck = "";
+
             foreach (KeyValuePair<string, double> pair in discountCodes)
             {
-                if(discountTextBox.Text == pair.Key)
+                if (discountTextBox.Text == pair.Key)
                 {
-                    totalDiscount = totalCost * (pair.Value / 100);
-                    totalCost -= totalDiscount;
-                    priceLabel.Text = "$" + totalCost;
-                    discountLabel.Text = "-$" + totalDiscount;                   
+                    keyCeck = pair.Value;
+                    valueCheck = pair.Key;
                 }
             }
+
+            if(keyCeck == 0)
+            {
+                MessageBox.Show("INVALID CODE!\nPlease try again", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                totalDiscount = totalCost * (keyCeck / 100);
+                totalCost -= totalDiscount;
+                priceLabel.Text = "$" + totalCost;
+                discountLabel.Text = "-$" + totalDiscount;
+                string[] temp = File.ReadLines("DiscountList.csv").Where(l => l != $"{keyCeck},{valueCheck}").ToArray();
+                File.WriteAllLines("DiscountList.csv", temp);
+            }
+
         }
 
         public static void AddProduct(Product product)
@@ -235,7 +251,7 @@ namespace Butik
                     string doubleTab = "\t";
                     if (p.Name.Length < 8)
                         doubleTab = "\t\t";
-                    receipt += string.Format("{0}\t{1}" + doubleTab + "${2}\t\t{3}\r\n", p.Quantity, p.Name, p.Price, p.Price*p.Quantity);
+                    receipt += string.Format("{0}\t{1}" + doubleTab + "${2}\t\t{3}\r\n", p.Quantity, p.Name, p.Price, p.Price * p.Quantity);
                 }
                 receipt += "\r\n \t\t\tTotal price: $" + totalCost;
 

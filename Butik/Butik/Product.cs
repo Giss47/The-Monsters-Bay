@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Butik
 {
-    
+
 
     class Product
     {
@@ -29,12 +29,12 @@ namespace Butik
 
         public FlowLayoutPanel GetInfoPanel()
         {
-            
+
             FlowLayoutPanel panel = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
-                AutoSize = true,
-                BackColor = Color.Bisque
+                AutoSize = true,                
+                BackgroundImage = Image.FromFile(@"resources\backgrounds\secondWindow.jpg")
 
             };
             panel.Controls.Add(new PictureBox { Image = Image.FromFile(ImageLocation), Size = new Size(600, 550), SizeMode = PictureBoxSizeMode.StretchImage });
@@ -49,16 +49,21 @@ namespace Butik
 
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 100));
             table.RowStyles.Add(new RowStyle(SizeType.Absolute, 350));
             table.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
             table.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            table.Size = new Size(350, 300);
+            table.BackColor = Color.Transparent;
 
             Label title = new Label()
             {
                 Text = Name,
-                Font = new Font("Arial", 17),
-                AutoSize = true
+                Font = new Font("Arial", 20),
+                AutoSize = true,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Dock = DockStyle.Fill,
+                ForeColor = Color.White
             };
             table.Controls.Add(title);
             table.SetColumnSpan(title, 2);
@@ -67,15 +72,24 @@ namespace Butik
             {
                 Text = Description,
                 Font = new Font("Arial", 17),
-                AutoSize = true
+                AutoSize = true,
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White
+
             };
             table.Controls.Add(description);
             table.SetColumnSpan(description, 2);
 
-            Label priceLabel = new Label { Text = "$" + Price.ToString(),
-                                           Font = new Font("Arial", 15),
-                                           ImageAlign = ContentAlignment.MiddleCenter
-                                          };
+            Label priceLabel = new Label
+            {
+                Text = "$" + Price.ToString(),
+                Font = new Font("Arial", 15),
+                TextAlign = ContentAlignment.MiddleCenter,
+                AutoSize = true,
+                Dock = DockStyle.Fill,
+                ForeColor = Color.Purple
+
+            };
             table.Controls.Add(priceLabel);
             table.SetColumnSpan(priceLabel, 2);
 
@@ -107,12 +121,22 @@ namespace Butik
                 Image = Image.FromFile(ImageLocation),
                 Size = new Size(200, 150),
                 Margin = new Padding(20),
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Padding = new Padding(5)
             };
             popUp.SetToolTip(box, "Click to view details");
 
-            box.Click += (s, e) => {
+            box.Click += (s, e) =>
+            {
                 MyForm.ChangePanel(GetInfoPanel());
+            };
+            box.MouseHover += (s, e) =>
+            {
+                box.BackColor = Color.Red;
+            };
+            box.MouseLeave += (s, e) =>
+            {
+                box.BackColor = Color.LightGray;
             };
 
             return box;

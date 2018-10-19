@@ -24,6 +24,8 @@ namespace Butik
             Icon = new Icon("resources/icon.ico");
             BackColor = Color.White;
             StartPosition = FormStartPosition.CenterScreen;
+            Padding = new Padding(5);
+            BackColor = Color.LightGray;
 
             mainPanel = new TableLayoutPanel()
             {
