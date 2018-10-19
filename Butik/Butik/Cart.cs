@@ -23,6 +23,7 @@ namespace Butik
         private static double totalDiscount;
         private static string cartFile = @"C:\Windows\Temp\cart.mbc";
 
+
         public static TableLayoutPanel GetPanel()
         {
             if (File.Exists(cartFile))
