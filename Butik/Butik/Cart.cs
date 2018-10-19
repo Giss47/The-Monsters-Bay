@@ -113,6 +113,8 @@ namespace Butik
             return panel;
         }
 
+
+
         // Controls methods
         private static Button CreateButton(string text)
         {
