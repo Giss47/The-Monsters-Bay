@@ -37,7 +37,11 @@ namespace Butik
                 BackgroundImage = Image.FromFile(@"resources\backgrounds\secondWindow.jpg"),               
 
             };
-            panel.Controls.Add(new PictureBox { Image = Image.FromFile(ImageLocation), Size = new Size(590, 540), SizeMode = PictureBoxSizeMode.StretchImage, Margin = new Padding(10) });
+            panel.Controls.Add(new PictureBox { Image = Image.FromFile(ImageLocation),
+                                                Size = new Size(590, 540),
+                                                SizeMode = PictureBoxSizeMode.Zoom,
+                                                Margin = new Padding(10),
+                                                BackColor = Color.Transparent });
 
             TableLayoutPanel table = new TableLayoutPanel()
             {

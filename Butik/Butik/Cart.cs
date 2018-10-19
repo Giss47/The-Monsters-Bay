@@ -177,30 +177,31 @@ namespace Butik
         }
         private static void SubmitDiscountButtonClick(object sender, EventArgs e)
         {
-            double keyCeck = 0;
-            string valueCheck = "";
+            string keyCeck = "";
+            double valueCheck = 0;
 
             foreach (KeyValuePair<string, double> pair in discountCodes)
             {
                 if (discountTextBox.Text == pair.Key)
                 {
-                    keyCeck = pair.Value;
-                    valueCheck = pair.Key;
+                    keyCeck = pair.Key;
+                    valueCheck = pair.Value;
                 }
             }
 
-            if (keyCeck == 0)
+            if (keyCeck == "")
             {
                 MessageBox.Show("INVALID CODE!\nPlease try again", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                totalDiscount = totalCost * (keyCeck / 100);
+                totalDiscount = totalCost * (valueCheck / 100);
                 totalCost -= totalDiscount;
                 priceLabel.Text = "$" + totalCost;
                 discountLabel.Text = "-$" + totalDiscount;
                 string[] temp = File.ReadLines("DiscountList.csv").Where(l => l != $"{keyCeck},{valueCheck}").ToArray();
                 File.WriteAllLines("DiscountList.csv", temp);
+                discountCodes.Remove(keyCeck);
             }
 
         }
