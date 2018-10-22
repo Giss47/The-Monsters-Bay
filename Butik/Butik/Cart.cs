@@ -18,6 +18,7 @@ namespace Butik
         private static TextBox discountTextBox;
         private static Label priceLabel;
         private static Label discountLabel;
+        private static DataGridView productGrid;
 
         private static double totalCost;
         private static double totalDiscount;
@@ -59,65 +60,15 @@ namespace Butik
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
 
-
-            TableLayoutPanel productsList = new TableLayoutPanel
+            productGrid = new DataGridView()
             {
-                ColumnCount = 3,
-                RowCount = 2 + cart.Count,
                 Dock = DockStyle.Fill,
-                CellBorderStyle = TableLayoutPanelCellBorderStyle.Inset,
-                BackColor = Color.White
+                DataSource = cart,
+                RowHeadersVisible = false
             };
-
-            for (int i = 0; i < 3; i++)
-            {
-                productsList.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35));
-            }
-
-            productsList.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
-
-            for (int i = 0; i < cart.Count; i++)
-            {
-                productsList.RowStyles.Add(new RowStyle(SizeType.Absolute, 20));
-            }
-            panel.SetColumnSpan(productsList, 3);
-
-
-            Label productListProduct = new Label
-            {
-                Text = "Product",
-                Dock = DockStyle.Fill,
-                Margin = new Padding(0),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Font = new Font("Arial", 10),
-                BackColor = Color.WhiteSmoke
-            };
-            Label quantityListProduct = new Label
-            {
-                Text = "Quantity",
-                Dock = DockStyle.Fill,
-                Margin = new Padding(0),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Font = new Font("Arial", 10),
-                BackColor = Color.WhiteSmoke
-            };
-            Label priceListProduct = new Label
-            {
-                Text = "Price",
-                Dock = DockStyle.Fill,
-                Margin = new Padding(0),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Font = new Font("Arial", 10),
-                BackColor = Color.WhiteSmoke
-            };
-
-
-            productsList.Controls.Add(productListProduct);
-            productsList.Controls.Add(quantityListProduct);
-            productsList.Controls.Add(priceListProduct);
-            panel.SetCellPosition(productsList, new TableLayoutPanelCellPosition(0, 0));
-            panel.Controls.Add(productsList);
-
+            panel.SetCellPosition(productGrid, new TableLayoutPanelCellPosition(0, 0));
+            panel.SetColumnSpan(productGrid, 3);
+            panel.Controls.Add(productGrid);
 
             Label discountLabelText = CreateLabel("Discount:", ContentAlignment.MiddleRight, Color.Black);
             panel.SetCellPosition(discountLabelText, new TableLayoutPanelCellPosition(1, 1));
@@ -164,9 +115,7 @@ namespace Butik
 
             return panel;
         }
-
-
-
+        
         // Controls methods
         private static Button CreateButton(string text)
         {
@@ -194,21 +143,32 @@ namespace Butik
         {
             if (cart.Contains(product))
             {
-                product.ChangeQuantity(1);
+                product.IncreaseQuantity();
             }
             else
             {
                 cart.Add(product);
             }
             SaveToFile();
-            totalCost += product.Price;
+            totalCost = 0;
+            foreach (Product p in cart)
+            {
+                totalCost += p.Cost;
+            }
             priceLabel.Text = "$" + totalCost;
+
+            RefreshDataGrid();
         }
         private static void SaveToFile()
         {
             List<string> cartString = new List<string> { };
             cart.ForEach(p => cartString.Add(p.Name + ";" + p.Price + ";" + p.Description + ";" + p.ImageLocation + ";" + p.Quantity));
             File.WriteAllLines(cartFile, cartString);
+        }
+        private static void RefreshDataGrid()
+        {
+            productGrid.DataSource = null;
+            productGrid.DataSource = cart;
         }
 
         // Eventlisteners
@@ -223,6 +183,8 @@ namespace Butik
             {
                 File.Delete(cartFile);
             }
+
+            RefreshDataGrid();
         }
         private static void DiscountTextBoxClick(object sender, EventArgs e)
         {
@@ -256,6 +218,8 @@ namespace Butik
                 string[] temp = File.ReadLines("DiscountList.csv").Where(l => l != $"{keyCeck},{valueCheck}").ToArray();
                 File.WriteAllLines("DiscountList.csv", temp);
                 discountCodes.Remove(keyCeck);
+
+                RefreshDataGrid();
             }
 
         }
@@ -300,6 +264,7 @@ namespace Butik
                         p.Print();
                     }
                 }
+                RefreshDataGrid();
             }
             else
             {

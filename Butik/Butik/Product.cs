@@ -8,15 +8,22 @@ using System.Windows.Forms;
 
 namespace Butik
 {
-
-
     class Product
     {
         public string Name { get; private set; }
+
+        [System.ComponentModel.Browsable(false)]
         public double Price { get; private set; }
+
+        [System.ComponentModel.Browsable(false)]
         public string Description { get; private set; }
+
+        [System.ComponentModel.Browsable(false)]
         public string ImageLocation { get; private set; }
+        
         public int Quantity { get; private set; }
+
+        public double Cost { get; private set; }
 
         public Product(string name, int price, string description, string image, int quantity = 1)
         {
@@ -25,6 +32,7 @@ namespace Butik
             Description = description;
             ImageLocation = image;
             Quantity = quantity;
+            Cost = Quantity * Price;
         }
 
         public FlowLayoutPanel GetInfoPanel()
@@ -146,9 +154,10 @@ namespace Butik
             return box;
         }
 
-        public void ChangeQuantity(int change)
+        public void IncreaseQuantity()
         {
-            Quantity += change;
+            Quantity++;
+            Cost = Quantity * Price;
         }
     }
 }
