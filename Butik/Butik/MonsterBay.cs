@@ -32,8 +32,7 @@ namespace Butik
             };
             
             productList.ForEach(p => panel.Controls.Add(p.GetPictureBox()));
-
-
+            
             return panel;
         }
     }

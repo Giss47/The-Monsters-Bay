@@ -102,7 +102,7 @@ namespace Butik
                 Text = "Back",
                 Size = new Size(200,50)
             };
-            back.Click += (s, e) => { MyForm.ChangePanel(MonsterBay.GetPanel()); };
+            back.Click += (s, e) => { MyForm.BayPanel(); };
             table.Controls.Add(back);
 
             Button addToCart = new Button()
