@@ -42,14 +42,18 @@ namespace Butik
             {
                 Dock = DockStyle.Fill,
                 AutoSize = true,                
-                BackgroundImage = Image.FromFile(@"resources\backgrounds\secondWindow.jpg"),               
+                BackgroundImage = Image.FromFile(@"resources\backgrounds\secondWindow.jpg"),
+                BackgroundImageLayout = ImageLayout.Stretch
 
             };
-            panel.Controls.Add(new PictureBox { Image = Image.FromFile(ImageLocation),
-                                                Size = new Size(590, 540),
-                                                SizeMode = PictureBoxSizeMode.Zoom,
-                                                Margin = new Padding(10),
-                                                BackColor = Color.Transparent });
+            panel.Controls.Add(new PictureBox
+            {
+                Image = Image.FromFile(ImageLocation),
+                Size = new Size(590, 540),
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Margin = new Padding(10),
+                BackColor = Color.Transparent
+            });
 
             TableLayoutPanel table = new TableLayoutPanel()
             {
@@ -110,7 +114,7 @@ namespace Butik
                 Text = "Back",
                 Size = new Size(200,50)
             };
-            back.Click += (s, e) => { MyForm.BayPanel(); };
+            back.Click += (s, e) => { MyForm.InsertBayPanel(); };
             table.Controls.Add(back);
 
             Button addToCart = new Button()
@@ -140,7 +144,7 @@ namespace Butik
 
             box.Click += (s, e) =>
             {
-                MyForm.ChangePanel(GetInfoPanel());
+                MyForm.InsertProductPanel(GetInfoPanel());
             };
             box.MouseHover += (s, e) =>
             {

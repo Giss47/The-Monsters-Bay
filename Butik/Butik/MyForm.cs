@@ -17,10 +17,9 @@ namespace Butik
 
         public MyForm()
         {
-            MaximumSize = new Size(1300, 675);
-            MinimumSize = new Size(570, 280);
-            Width = 1300;
-            Height = 675;
+            MinimumSize = new Size(585, 310);
+            Width = 1330;
+            Height = 685;
             Text = "The Monsters Bay";
             Icon = new Icon("resources/icon.ico");
             BackColor = Color.White;
@@ -59,27 +58,28 @@ namespace Butik
             mainPanel.Controls.Add(cartLabel);
 
             bayPanel = new MonsterBay();
+            mainPanel.SetCellPosition(bayPanel, new TableLayoutPanelCellPosition(0, 1));
             mainPanel.Controls.Add(bayPanel);
 
             cartPanel = new Cart();
+            mainPanel.SetCellPosition(cartPanel, new TableLayoutPanelCellPosition(1, 1));
+
             mainPanel.Controls.Add(cartPanel);
             
 
             FormClosing += MyForm_FormClosing;
         }
 
-        public static void ChangePanel(FlowLayoutPanel newPanel)
+        public static void InsertProductPanel(FlowLayoutPanel productPanel)
         {
             mainPanel.Controls.Remove(mainPanel.GetControlFromPosition(0, 1));
-            mainPanel.SetCellPosition(newPanel, new TableLayoutPanelCellPosition(0, 1));
-            mainPanel.Controls.Add(newPanel);
+            mainPanel.Controls.Add(productPanel, 0, 1);
         }
 
-        public static void BayPanel()
+        public static void InsertBayPanel()
         {
             mainPanel.Controls.Remove(mainPanel.GetControlFromPosition(0, 1));
-            mainPanel.SetCellPosition(bayPanel, new TableLayoutPanelCellPosition(0, 1));
-            mainPanel.Controls.Add(bayPanel);
+            mainPanel.Controls.Add(bayPanel, 0, 1);
         }
 
         private void MyForm_FormClosing(object sender, FormClosingEventArgs e)

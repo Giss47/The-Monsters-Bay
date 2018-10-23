@@ -24,6 +24,7 @@ namespace Butik
 
             Dock = DockStyle.Fill;
             BorderStyle = BorderStyle.FixedSingle;
+            AutoScroll = true;
             AutoSize = true;
             BackgroundImage = Image.FromFile(@"resources\backgrounds\2001.png");
             BackgroundImageLayout = ImageLayout.Stretch;

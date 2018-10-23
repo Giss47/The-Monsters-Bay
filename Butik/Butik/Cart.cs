@@ -51,16 +51,13 @@ namespace Butik
 
             Dock = DockStyle.Fill;
             ColumnCount = 3;
-            RowCount = 6;
+            RowCount = 2;
 
             ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
             ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
             ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
             RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
-            RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
-            RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
-            RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+            RowStyles.Add(new RowStyle(SizeType.Absolute, 140));
 
             productGrid = new DataGridView()
             {
@@ -68,25 +65,45 @@ namespace Butik
                 DataSource = cart,
                 RowHeadersVisible = false
             };
-            SetCellPosition(productGrid, new TableLayoutPanelCellPosition(0, 0));
             SetColumnSpan(productGrid, 3);
             Controls.Add(productGrid);
 
+            TableLayoutPanel checkoutBox = CreateCheckoutBox();
+            Controls.Add(checkoutBox);
+            SetColumnSpan(checkoutBox, 3);
+        }
+
+        // Controls methods
+        private static TableLayoutPanel CreateCheckoutBox()
+        {
+            TableLayoutPanel panel = new TableLayoutPanel()
+            {
+                ColumnCount = 3,
+                RowCount = 4,
+                Dock = DockStyle.Fill,
+                Margin = new Padding(0)
+            };
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+
             Label discountLabelText = CreateLabel("Discount:", ContentAlignment.MiddleRight, Color.Black);
-            SetCellPosition(discountLabelText, new TableLayoutPanelCellPosition(1, 1));
-            Controls.Add(discountLabelText);
+            panel.SetColumnSpan(discountLabelText, 2);
+            panel.Controls.Add(discountLabelText);
 
             discountLabel = CreateLabel("$" + totalDiscount, ContentAlignment.MiddleCenter, Color.Red);
-            SetCellPosition(discountLabel, new TableLayoutPanelCellPosition(2, 1));
-            Controls.Add(discountLabel);
+            panel.Controls.Add(discountLabel);
 
             Label totalCostLabel = CreateLabel("Total cost:", ContentAlignment.MiddleRight, Color.Black);
-            SetCellPosition(totalCostLabel, new TableLayoutPanelCellPosition(1, 2));
-            Controls.Add(totalCostLabel);
+            panel.SetColumnSpan(totalCostLabel, 2);
+            panel.Controls.Add(totalCostLabel);
 
             priceLabel = CreateLabel("$" + totalCost, ContentAlignment.MiddleCenter, Color.Black);
-            SetCellPosition(priceLabel, new TableLayoutPanelCellPosition(2, 2));
-            Controls.Add(priceLabel);
+            panel.Controls.Add(priceLabel);
 
             discountTextBox = new TextBox()
             {
@@ -94,29 +111,26 @@ namespace Butik
                 Dock = DockStyle.Fill
             };
             discountTextBox.Click += DiscountTextBoxClick;
-            SetColumnSpan(discountTextBox, 2);
-            SetCellPosition(discountTextBox, new TableLayoutPanelCellPosition(0, 3));
-            Controls.Add(discountTextBox);
+            panel.SetColumnSpan(discountTextBox, 2);
+            panel.Controls.Add(discountTextBox);
 
             Button discountButton = CreateButton("Submit");
             discountButton.Click += SubmitDiscountButtonClick;
-            SetCellPosition(discountButton, new TableLayoutPanelCellPosition(3, 3));
-            Controls.Add(discountButton);
+            panel.Controls.Add(discountButton);
 
             Button clearCartButton = CreateButton("Clear cart");
             clearCartButton.Click += ClearCart;
-            SetCellPosition(clearCartButton, new TableLayoutPanelCellPosition(0, 4));
-            Controls.Add(clearCartButton);
+            panel.Controls.Add(clearCartButton);
 
             Button placeOrderButton = CreateButton("Place order");
             placeOrderButton.Click += PlaceOrderButtonClick;
             placeOrderButton.Click += ClearCart;
-            SetCellPosition(placeOrderButton, new TableLayoutPanelCellPosition(1, 4));
-            SetColumnSpan(placeOrderButton, 2);
-            Controls.Add(placeOrderButton);
+            panel.SetColumnSpan(placeOrderButton, 2);
+            panel.Controls.Add(placeOrderButton);
+
+            return panel;
         }
-        
-        // Controls methods
+
         private static Button CreateButton(string text)
         {
             return new Button()
