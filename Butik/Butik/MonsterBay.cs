@@ -9,12 +9,12 @@ using System.IO;
 
 namespace Butik
 {
-    static class MonsterBay
+    class MonsterBay : FlowLayoutPanel
     {
         static string[] products = File.ReadAllLines("Trucks.csv");
         static List<Product> productList = new List<Product> { };
 
-        public static FlowLayoutPanel GetPanel()
+        public MonsterBay()
         {
             foreach (string s in products)
             {
@@ -22,18 +22,13 @@ namespace Butik
                 productList.Add(new Product(p[0], int.Parse(p[1]), p[2], p[3]));
             }
 
-            FlowLayoutPanel panel = new FlowLayoutPanel()
-            {
-                Dock = DockStyle.Fill,
-                BorderStyle = BorderStyle.FixedSingle,
-                AutoSize = true,
-                BackgroundImage = Image.FromFile(@"resources\backgrounds\2001.png"),
-                BackgroundImageLayout = ImageLayout.Stretch,
-            };
-            
-            productList.ForEach(p => panel.Controls.Add(p.GetPictureBox()));
-            
-            return panel;
+            Dock = DockStyle.Fill;
+            BorderStyle = BorderStyle.FixedSingle;
+            AutoSize = true;
+            BackgroundImage = Image.FromFile(@"resources\backgrounds\2001.png");
+            BackgroundImageLayout = ImageLayout.Stretch;
+
+            productList.ForEach(p => Controls.Add(p.GetPictureBox()));
         }
     }
 }

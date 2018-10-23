@@ -12,7 +12,8 @@ namespace Butik
     class MyForm : Form
     {
         static TableLayoutPanel mainPanel;
-        static FlowLayoutPanel bayPanel;
+        static MonsterBay bayPanel;
+        static Cart cartPanel;
 
         public MyForm()
         {
@@ -57,13 +58,14 @@ namespace Butik
             };
             mainPanel.Controls.Add(cartLabel);
 
-            bayPanel = MonsterBay.GetPanel();
+            bayPanel = new MonsterBay();
             mainPanel.Controls.Add(bayPanel);
 
-            mainPanel.Controls.Add(Cart.GetPanel());
+            cartPanel = new Cart();
+            mainPanel.Controls.Add(cartPanel);
+            
 
             FormClosing += MyForm_FormClosing;
-
         }
 
         public static void ChangePanel(FlowLayoutPanel newPanel)

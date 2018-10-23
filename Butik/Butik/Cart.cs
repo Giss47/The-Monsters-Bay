@@ -10,7 +10,7 @@ using System.IO;
 
 namespace Butik
 {
-    class Cart
+    class Cart : TableLayoutPanel
     {
         private static List<Product> cart = new List<Product> { };
         private static Dictionary<string, double> discountCodes = new Dictionary<string, double> { };
@@ -24,7 +24,7 @@ namespace Butik
         private static double totalDiscount;
         private static string cartFile = @"C:\Windows\Temp\cart.mbc";
 
-        public static TableLayoutPanel GetPanel()
+        public Cart()
         {
             if (File.Exists(cartFile))
             {
@@ -49,20 +49,18 @@ namespace Butik
 
             cart.ForEach(p => totalCost += p.Cost);
 
-            TableLayoutPanel panel = new TableLayoutPanel()
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 3,
-                RowCount = 6
-            };
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
-            panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
-            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
-            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
-            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+            Dock = DockStyle.Fill;
+            ColumnCount = 3;
+            RowCount = 6;
+
+            ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
+            ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
+            ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
+            RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
 
             productGrid = new DataGridView()
             {
@@ -70,25 +68,25 @@ namespace Butik
                 DataSource = cart,
                 RowHeadersVisible = false
             };
-            panel.SetCellPosition(productGrid, new TableLayoutPanelCellPosition(0, 0));
-            panel.SetColumnSpan(productGrid, 3);
-            panel.Controls.Add(productGrid);
+            SetCellPosition(productGrid, new TableLayoutPanelCellPosition(0, 0));
+            SetColumnSpan(productGrid, 3);
+            Controls.Add(productGrid);
 
             Label discountLabelText = CreateLabel("Discount:", ContentAlignment.MiddleRight, Color.Black);
-            panel.SetCellPosition(discountLabelText, new TableLayoutPanelCellPosition(1, 1));
-            panel.Controls.Add(discountLabelText);
+            SetCellPosition(discountLabelText, new TableLayoutPanelCellPosition(1, 1));
+            Controls.Add(discountLabelText);
 
             discountLabel = CreateLabel("$" + totalDiscount, ContentAlignment.MiddleCenter, Color.Red);
-            panel.SetCellPosition(discountLabel, new TableLayoutPanelCellPosition(2, 1));
-            panel.Controls.Add(discountLabel);
+            SetCellPosition(discountLabel, new TableLayoutPanelCellPosition(2, 1));
+            Controls.Add(discountLabel);
 
             Label totalCostLabel = CreateLabel("Total cost:", ContentAlignment.MiddleRight, Color.Black);
-            panel.SetCellPosition(totalCostLabel, new TableLayoutPanelCellPosition(1, 2));
-            panel.Controls.Add(totalCostLabel);
+            SetCellPosition(totalCostLabel, new TableLayoutPanelCellPosition(1, 2));
+            Controls.Add(totalCostLabel);
 
             priceLabel = CreateLabel("$" + totalCost, ContentAlignment.MiddleCenter, Color.Black);
-            panel.SetCellPosition(priceLabel, new TableLayoutPanelCellPosition(2, 2));
-            panel.Controls.Add(priceLabel);
+            SetCellPosition(priceLabel, new TableLayoutPanelCellPosition(2, 2));
+            Controls.Add(priceLabel);
 
             discountTextBox = new TextBox()
             {
@@ -96,28 +94,26 @@ namespace Butik
                 Dock = DockStyle.Fill
             };
             discountTextBox.Click += DiscountTextBoxClick;
-            panel.SetColumnSpan(discountTextBox, 2);
-            panel.SetCellPosition(discountTextBox, new TableLayoutPanelCellPosition(0, 3));
-            panel.Controls.Add(discountTextBox);
+            SetColumnSpan(discountTextBox, 2);
+            SetCellPosition(discountTextBox, new TableLayoutPanelCellPosition(0, 3));
+            Controls.Add(discountTextBox);
 
             Button discountButton = CreateButton("Submit");
             discountButton.Click += SubmitDiscountButtonClick;
-            panel.SetCellPosition(discountButton, new TableLayoutPanelCellPosition(3, 3));
-            panel.Controls.Add(discountButton);
+            SetCellPosition(discountButton, new TableLayoutPanelCellPosition(3, 3));
+            Controls.Add(discountButton);
 
             Button clearCartButton = CreateButton("Clear cart");
             clearCartButton.Click += ClearCart;
-            panel.SetCellPosition(clearCartButton, new TableLayoutPanelCellPosition(0, 4));
-            panel.Controls.Add(clearCartButton);
+            SetCellPosition(clearCartButton, new TableLayoutPanelCellPosition(0, 4));
+            Controls.Add(clearCartButton);
 
             Button placeOrderButton = CreateButton("Place order");
             placeOrderButton.Click += PlaceOrderButtonClick;
             placeOrderButton.Click += ClearCart;
-            panel.SetCellPosition(placeOrderButton, new TableLayoutPanelCellPosition(1, 4));
-            panel.SetColumnSpan(placeOrderButton, 2);
-            panel.Controls.Add(placeOrderButton);
-
-            return panel;
+            SetCellPosition(placeOrderButton, new TableLayoutPanelCellPosition(1, 4));
+            SetColumnSpan(placeOrderButton, 2);
+            Controls.Add(placeOrderButton);
         }
         
         // Controls methods
