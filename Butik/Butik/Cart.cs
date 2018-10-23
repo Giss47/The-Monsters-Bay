@@ -37,13 +37,16 @@ namespace Butik
                     totalCost += double.Parse(p[1]);
                 }
             }
-            string[] getDiscountCodes = File.ReadAllLines("DiscountList.csv");
-            foreach (var item in getDiscountCodes)
+            if (File.Exists("DiscountList.csv"))
             {
-                string[] parts = item.Split(',');
-                discountCodes.Add(parts[0], int.Parse(parts[1]));
-            }
+                string[] getDiscountCodes = File.ReadAllLines("DiscountList.csv");
 
+                foreach (string s in getDiscountCodes)
+                {
+                    string[] codes = s.Split(',');
+                    discountCodes.Add(codes[0], int.Parse(codes[1]));
+                }
+            }
 
             TableLayoutPanel panel = new TableLayoutPanel()
             {
