@@ -47,7 +47,7 @@ namespace Butik
                 }
             }
 
-            cart.ForEach(p => totalCost += p.Quantity * p.Price);
+            cart.ForEach(p => totalCost += p.Cost);
 
             TableLayoutPanel panel = new TableLayoutPanel()
             {
