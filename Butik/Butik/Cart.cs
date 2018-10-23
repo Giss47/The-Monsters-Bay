@@ -34,7 +34,6 @@ namespace Butik
                 {
                     string[] p = s.Split(';');
                     cart.Add(new Product(p[0], int.Parse(p[1]), p[2], p[3], int.Parse(p[4])));
-                    totalCost += double.Parse(p[1]);
                 }
             }
             if (File.Exists("DiscountList.csv"))
@@ -47,6 +46,8 @@ namespace Butik
                     discountCodes.Add(codes[0], int.Parse(codes[1]));
                 }
             }
+
+            cart.ForEach(p => totalCost += p.Quantity * p.Price);
 
             TableLayoutPanel panel = new TableLayoutPanel()
             {
