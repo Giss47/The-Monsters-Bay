@@ -41,43 +41,44 @@ namespace Butik
             FlowLayoutPanel panel = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
-                AutoSize = true,                
+                AutoSize = true,
+                AutoScroll = true,
                 BackgroundImage = Image.FromFile(@"resources\backgrounds\secondWindow.jpg"),
                 BackgroundImageLayout = ImageLayout.Stretch
-
             };
-            panel.Controls.Add(new PictureBox
+
+            PictureBox picBox = new PictureBox()
             {
                 Image = Image.FromFile(ImageLocation),
-                Size = new Size(590, 540),
                 SizeMode = PictureBoxSizeMode.Zoom,
-                Margin = new Padding(10),
-                BackColor = Color.Transparent
-            });
+                BackColor = Color.Transparent,
+                Width = 400,
+                Height = 300
+            };
+            panel.Controls.Add(picBox);
 
             TableLayoutPanel table = new TableLayoutPanel()
             {
                 ColumnCount = 2,
                 RowCount = 4,
-                Dock = DockStyle.Fill
+                AutoSize = true,
+                BackColor = Color.Transparent
             };
             panel.Controls.Add(table);
 
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
-            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 100));
-            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 300));
-            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 100));
-            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
-            table.Size = new Size(350, 300);
-            table.BackColor = Color.Transparent;
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 20));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 15));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 15));
 
             Label title = new Label()
             {
                 Text = Name,
                 Font = new Font("Arial", 20),
                 AutoSize = true,
-                TextAlign = ContentAlignment.MiddleCenter,
+                TextAlign = ContentAlignment.MiddleLeft,
                 Dock = DockStyle.Fill,
                 ForeColor = Color.White
             };
@@ -89,22 +90,20 @@ namespace Butik
                 Text = Description,
                 Font = new Font("Arial", 17),
                 AutoSize = true,
-                TextAlign = ContentAlignment.MiddleCenter,
+                TextAlign = ContentAlignment.TopLeft,
                 ForeColor = Color.White
-
             };
             table.Controls.Add(description);
             table.SetColumnSpan(description, 2);
 
             Label priceLabel = new Label
             {
-                Text = "$" + Price.ToString(),
-                Font = new Font("Arial", 30),
-                TextAlign = ContentAlignment.MiddleCenter,
+                Text = "Price: $" + Price.ToString(),
+                Font = new Font("Arial", 17),
+                TextAlign = ContentAlignment.MiddleRight,
                 AutoSize = true,
                 Dock = DockStyle.Fill,
-                ForeColor = Color.Purple
-
+                ForeColor = Color.White
             };
             table.Controls.Add(priceLabel);
             table.SetColumnSpan(priceLabel, 2);

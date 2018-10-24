@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
 
 
 namespace Butik
@@ -12,11 +13,20 @@ namespace Butik
     class MyForm : Form
     {
         static TableLayoutPanel mainPanel;
-        static MonsterBay bayPanel;
-        static Cart cartPanel;
+        static FlowLayoutPanel bayPanel;
+        static FlowLayoutPanel productPanel;
+
+        private static string[] stringProducts = File.ReadAllLines("Trucks.csv");
+        private Product[] products = new Product[stringProducts.Length];
 
         public MyForm()
         {
+            for (int i = 0; i < products.Length; i++)
+            {
+                string[] p = stringProducts[i].Split(';');
+                products[i] = new Product(p[0], int.Parse(p[1]), p[2], p[3]);
+            }
+
             MinimumSize = new Size(585, 310);
             Width = 1330;
             Height = 685;
@@ -26,7 +36,7 @@ namespace Butik
             StartPosition = FormStartPosition.CenterScreen;
             Padding = new Padding(5);
             BackColor = Color.LightGray;
-
+            
             mainPanel = new TableLayoutPanel()
             {
                 Dock = DockStyle.Fill,
@@ -57,41 +67,54 @@ namespace Butik
             };
             mainPanel.Controls.Add(cartLabel);
 
-            bayPanel = new MonsterBay();
+            bayPanel = new FlowLayoutPanel()
+            {
+                Dock = DockStyle.Fill,
+                BorderStyle = BorderStyle.FixedSingle,
+                AutoScroll = true,
+                AutoSize = true,
+                BackgroundImage = Image.FromFile(@"resources\backgrounds\2001.png"),
+                BackgroundImageLayout = ImageLayout.Stretch
+            };
             mainPanel.SetCellPosition(bayPanel, new TableLayoutPanelCellPosition(0, 1));
             mainPanel.Controls.Add(bayPanel);
+            foreach (Product p in products)
+            {
+                bayPanel.Controls.Add(p.GetPictureBox());
+            }
 
-            cartPanel = new Cart();
+            TableLayoutPanel cartPanel = new Cart();
             mainPanel.SetCellPosition(cartPanel, new TableLayoutPanelCellPosition(1, 1));
-
             mainPanel.Controls.Add(cartPanel);
             
-
             FormClosing += MyForm_FormClosing;
         }
 
-        public static void InsertProductPanel(FlowLayoutPanel productPanel)
+        public static void InsertProductPanel(FlowLayoutPanel panel)
         {
-            mainPanel.Controls.Remove(mainPanel.GetControlFromPosition(0, 1));
-            mainPanel.Controls.Add(productPanel, 0, 1);
+            productPanel = panel;
+            bayPanel.Hide();
+            mainPanel.SetCellPosition(productPanel, new TableLayoutPanelCellPosition(0, 1));
+            mainPanel.Controls.Add(productPanel);
         }
 
         public static void InsertBayPanel()
         {
-            mainPanel.Controls.Remove(mainPanel.GetControlFromPosition(0, 1));
-            mainPanel.Controls.Add(bayPanel, 0, 1);
+            productPanel.Hide();
+            bayPanel.Show();
         }
 
         private void MyForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             string message = "Are you sure  you would like to exit The Monsters Bay?";
             string caption = "Exit";
-            var result = MessageBox.Show(message, caption,
+            DialogResult result = MessageBox.Show(message, caption,
                                          MessageBoxButtons.YesNo,
                                          MessageBoxIcon.Question);
             if (result == DialogResult.No)
+            {
                 e.Cancel = true;
-
+            }
         }
     }
 }

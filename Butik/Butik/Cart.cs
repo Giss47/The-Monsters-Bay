@@ -63,7 +63,11 @@ namespace Butik
             {
                 Dock = DockStyle.Fill,
                 DataSource = cart,
-                RowHeadersVisible = false
+                RowHeadersVisible = false,
+                CellBorderStyle = DataGridViewCellBorderStyle.None,
+                AllowUserToResizeColumns = false,
+                AllowUserToResizeRows = false,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect
             };
             SetColumnSpan(productGrid, 3);
             Controls.Add(productGrid);
