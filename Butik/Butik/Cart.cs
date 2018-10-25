@@ -86,7 +86,8 @@ namespace Butik
                 CellBorderStyle = DataGridViewCellBorderStyle.None,
                 AllowUserToResizeColumns = false,
                 AllowUserToResizeRows = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                ReadOnly = true
             };
             SetColumnSpan(productGrid, 3);
             Controls.Add(productGrid);
@@ -96,7 +97,7 @@ namespace Butik
             SetColumnSpan(checkoutBox, 3);
         }
 
-        // Controls methods
+        // Control methods
         private static TableLayoutPanel CreateCheckoutBox()
         {
             TableLayoutPanel panel = new TableLayoutPanel()
@@ -156,7 +157,6 @@ namespace Butik
 
             return panel;
         }
-
         private static Button CreateButton(string text)
         {
             return new Button()
@@ -232,20 +232,6 @@ namespace Butik
             }
             priceLabel.Text = "$" + totalCost;
         }
-        private static void ClearCart(object sender, EventArgs e)
-        {
-            cart.Clear();
-            totalCost = 0;
-            totalDiscount = 0;
-            priceLabel.Text = "$" + totalCost;
-            discountLabel.Text = "$" + totalDiscount;
-            if (File.Exists(cartFile))
-            {
-                File.Delete(cartFile);
-            }
-
-            RefreshDataGrid();
-        }
         private static void DiscountTextBoxClick(object sender, EventArgs e)
         {
             TextBox t = (TextBox)sender;
@@ -282,6 +268,20 @@ namespace Butik
                 RefreshDataGrid();
             }
 
+        }
+        private static void ClearCart(object sender, EventArgs e)
+        {
+            cart.Clear();
+            totalCost = 0;
+            totalDiscount = 0;
+            priceLabel.Text = "$" + totalCost;
+            discountLabel.Text = "$" + totalDiscount;
+            if (File.Exists(cartFile))
+            {
+                File.Delete(cartFile);
+            }
+
+            RefreshDataGrid();
         }
         private static void PlaceOrderButtonClick(object sender, EventArgs e1)
         {
