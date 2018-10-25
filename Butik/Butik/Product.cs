@@ -15,7 +15,7 @@ namespace Butik
         public string Description { get; private set; }
         public string ImageLocation { get; private set; }
 
-        public Product(string name, int price, string description, string image)
+        public Product(string name, double price, string description, string image)
         {
             Name = name;
             Price = price;
