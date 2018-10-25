@@ -114,8 +114,11 @@ namespace Butik
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
 
+            Button removeButton = CreateButton("Remove item");
+            removeButton.Click += RemoveButtonClick;
+            panel.Controls.Add(removeButton);
+
             Label discountLabelText = CreateLabel("Discount:", ContentAlignment.MiddleRight, Color.Black);
-            panel.SetColumnSpan(discountLabelText, 2);
             panel.Controls.Add(discountLabelText);
 
             discountLabel = CreateLabel("$" + totalDiscount, ContentAlignment.MiddleCenter, Color.Red);
@@ -216,6 +219,19 @@ namespace Butik
         }
 
         // Eventlisteners
+        private static void RemoveButtonClick(object sender, EventArgs e)
+        {
+            int i = productGrid.CurrentCell.RowIndex;
+            cart.Remove(cart[i]);
+            RefreshDataGrid();
+            SaveToFile();
+            totalCost = 0;
+            foreach (CartProduct p in cart)
+            {
+                totalCost += p.Cost;
+            }
+            priceLabel.Text = "$" + totalCost;
+        }
         private static void ClearCart(object sender, EventArgs e)
         {
             cart.Clear();
