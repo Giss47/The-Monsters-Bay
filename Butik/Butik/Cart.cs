@@ -10,9 +10,28 @@ using System.IO;
 
 namespace Butik
 {
+    class CartProduct
+    {
+        public string Name { get; private set; }
+        public int Quantity { get; set; }
+
+        [System.ComponentModel.Browsable(false)]
+        public double Price { get; private set; }
+
+        public double Cost { get; set; }
+
+        public CartProduct(string name, int quantity, double price)
+        {
+            Name = name;
+            Quantity = quantity;
+            Price = price;
+            Cost = Quantity * Price;
+        }
+    }
+
     class Cart : TableLayoutPanel
     {
-        private static List<Product> cart = new List<Product> { };
+        private static List<CartProduct> cart = new List<CartProduct> { };
         private static Dictionary<string, double> discountCodes = new Dictionary<string, double> { };
 
         private static TextBox discountTextBox;
@@ -33,7 +52,7 @@ namespace Butik
                 foreach (string s in temp)
                 {
                     string[] p = s.Split(';');
-                    cart.Add(new Product(p[0], int.Parse(p[1]), p[2], p[3], int.Parse(p[4])));
+                    cart.Add(new CartProduct(p[0], int.Parse(p[1]), double.Parse(p[2])));
                 }
             }
             if (File.Exists("DiscountList.csv"))
@@ -159,28 +178,35 @@ namespace Butik
         // Operation methods
         public static void AddProduct(Product product)
         {
-            if (cart.Contains(product))
+            bool productCheck = false;
+            
+            foreach (CartProduct c in cart)
             {
-                product.IncreaseQuantity();
+                if (product.Name == c.Name)
+                {
+                    productCheck = true;
+                    c.Quantity++;
+                    c.Cost = c.Price * c.Quantity;
+                }
             }
-            else
+            if (!productCheck)
             {
-                cart.Add(product);
+                cart.Add(new CartProduct(product.Name, 1, product.Price));
             }
             SaveToFile();
             totalCost = 0;
-            foreach (Product p in cart)
+            foreach (CartProduct p in cart)
             {
                 totalCost += p.Cost;
             }
             priceLabel.Text = "$" + totalCost;
-
+            
             RefreshDataGrid();
         }
         private static void SaveToFile()
         {
             List<string> cartString = new List<string> { };
-            cart.ForEach(p => cartString.Add(p.Name + ";" + p.Price + ";" + p.Description + ";" + p.ImageLocation + ";" + p.Quantity));
+            cart.ForEach(p => cartString.Add(p.Name + ";" + p.Quantity + ";" + p.Price));
             File.WriteAllLines(cartFile, cartString);
         }
         private static void RefreshDataGrid()
@@ -249,7 +275,7 @@ namespace Butik
                 string receipt = "Your order has been placed.\r\n" +
                     "\r\n\r\n" +
                     "Qty:\tProduct\t\tUnit price:\tAmount:\r\n";
-                foreach (Product p in cart)
+                foreach (CartProduct p in cart)
                 {
                     string doubleTab = "\t";
                     if (p.Name.Length < 8)
