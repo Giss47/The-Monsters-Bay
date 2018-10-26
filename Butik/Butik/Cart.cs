@@ -239,8 +239,21 @@ namespace Butik
         }
         private static void SubmitDiscountButtonClick(object sender, EventArgs e)
         {
+            Button submit = sender as Button; // to be able to disable the button after using
             string keyCeck = "";
             double valueCheck = 0;
+
+            string message = "Make sure you finished buying before using your discount code!" +
+                             "\n Would you like to proceed?"; // checking with customrer before using the code
+            string caption = "";
+            DialogResult result = MessageBox.Show(message, caption,
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question);
+            if (result == DialogResult.No)
+            {
+                return;
+            }
+
 
             foreach (KeyValuePair<string, double> pair in discountCodes)
             {
@@ -264,6 +277,7 @@ namespace Butik
                 string[] temp = File.ReadLines("DiscountList.csv").Where(l => l != $"{keyCeck},{valueCheck}").ToArray();
                 File.WriteAllLines("DiscountList.csv", temp);
                 discountCodes.Remove(keyCeck);
+                submit.Enabled = false; // disable the button once used
 
                 RefreshDataGrid();
             }
