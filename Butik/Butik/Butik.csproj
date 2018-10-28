@@ -66,6 +66,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="resources\1.wav" />
     <Content Include="resources\backgrounds\2001.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
