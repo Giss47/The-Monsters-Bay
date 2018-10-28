@@ -20,7 +20,7 @@ namespace Butik
         private Button musicONOFF;
         static SoundPlayer WannaRock = new SoundPlayer
         {
-            SoundLocation = @"resources\1.wav"
+            SoundLocation = @"resources\WR.wav"
         };
 
         private static string[] stringProducts = File.ReadAllLines("Trucks.csv");
