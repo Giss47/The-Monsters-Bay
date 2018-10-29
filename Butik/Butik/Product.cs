@@ -23,6 +23,7 @@ namespace Butik
             ImageLocation = image;
         }
 
+        // Get panels-methods
         public FlowLayoutPanel GetInfoPanel()
         {
             FlowLayoutPanel panel = new FlowLayoutPanel
@@ -51,63 +52,31 @@ namespace Butik
                 AutoSize = true,
                 BackColor = Color.Transparent
             };
-            panel.Controls.Add(table);
-
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150));
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 20));
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 15));
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 15));
+            panel.Controls.Add(table);
 
-            Label title = new Label()
-            {
-                Text = Name,
-                Font = new Font("Arial", 20),
-                AutoSize = true,
-                TextAlign = ContentAlignment.MiddleLeft,
-                Dock = DockStyle.Fill,
-                ForeColor = Color.White
-            };
+            Label title = CreateInfoPanelLabel(Name, 20, ContentAlignment.MiddleLeft);
             table.Controls.Add(title);
             table.SetColumnSpan(title, 2);
 
-            Label description = new Label()
-            {
-                Text = Description,
-                Font = new Font("Arial", 17),
-                AutoSize = true,
-                TextAlign = ContentAlignment.TopLeft,
-                ForeColor = Color.White
-            };
+            Label description = CreateInfoPanelLabel(Description, 17, ContentAlignment.TopLeft);
             table.Controls.Add(description);
             table.SetColumnSpan(description, 2);
 
-            Label priceLabel = new Label
-            {
-                Text = "Price: $" + Price.ToString(),
-                Font = new Font("Arial", 17),
-                TextAlign = ContentAlignment.MiddleRight,
-                AutoSize = true,
-                Dock = DockStyle.Fill,
-                ForeColor = Color.White
-            };
-            table.Controls.Add(priceLabel);
-            table.SetColumnSpan(priceLabel, 2);
+            Label price = CreateInfoPanelLabel("Price: $" + Price, 17, ContentAlignment.MiddleRight);
+            table.Controls.Add(price);
+            table.SetColumnSpan(price, 2);
 
-            Button back = new Button()
-            {
-                Text = "Back",
-                Size = new Size(200,50)
-            };
+            Button back = CreateInfoPanelButton("Back");
             back.Click += (s, e) => { MyForm.InsertBayPanel(); };
             table.Controls.Add(back);
 
-            Button addToCart = new Button()
-            {
-                Text = "Add to cart",
-                Size = new Size(200, 50)               
-            };
+            Button addToCart = CreateInfoPanelButton("Add to cart");
             addToCart.Click += (s, e) => { Cart.AddProduct(this); };
             table.Controls.Add(addToCart);
 
@@ -143,41 +112,50 @@ namespace Butik
 
             ToolTip popUp = new ToolTip();
             popUp.SetToolTip(box, "Click to view details");
+            box.Click += (s, e) => { MyForm.InsertProductPanel(GetInfoPanel()); };
+            box.MouseHover += (s, e) => { box.BackColor = Color.Red; };
+            box.MouseLeave += (s, e) => { box.BackColor = Color.LightGray; };
+            
+            panel.Controls.Add(CreateProductPanelLabel(Name, ContentAlignment.TopLeft));
 
-            box.Click += (s, e) =>
-            {
-                MyForm.InsertProductPanel(GetInfoPanel());
-            };
-            box.MouseHover += (s, e) =>
-            {
-                box.BackColor = Color.Red;
-            };
-            box.MouseLeave += (s, e) =>
-            {
-                box.BackColor = Color.LightGray;
-            };
-
-            Label productLabel = new Label()
-            {
-                Font = new Font("Arial", 10, FontStyle.Bold),
-                Text = Name,
-                TextAlign = ContentAlignment.TopLeft,
-                Dock = DockStyle.Fill,
-                ForeColor = Color.White
-            };
-            panel.Controls.Add(productLabel);
-
-            Label priceLabel = new Label()
-            {
-                Font = new Font("Arial", 10, FontStyle.Bold),
-                Text = "$" + Convert.ToString(Price),
-                TextAlign = ContentAlignment.TopRight,
-                Dock = DockStyle.Fill,
-                ForeColor = Color.White
-            };
-            panel.Controls.Add(priceLabel);
+            panel.Controls.Add(CreateProductPanelLabel("$" + Price, ContentAlignment.TopRight));
 
             return panel;
+        }
+
+        // Get controls-methods
+        private static Label CreateInfoPanelLabel(string text, int size, ContentAlignment align)
+        {
+            return new Label()
+            {
+                Text = text,
+                Font = new Font("Arial", size),
+                AutoSize = true,
+                Dock = DockStyle.Fill,
+                TextAlign = align,
+                ForeColor = Color.White
+            };
+        }
+
+        private static Button CreateInfoPanelButton(string text)
+        {
+            return new Button()
+            {
+                Text = text,
+                Size = new Size(200, 50)
+            };
+        }
+
+        private static Label CreateProductPanelLabel(string text, ContentAlignment align)
+        {
+            return new Label()
+            {
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                Text = text,
+                TextAlign = align,
+                Dock = DockStyle.Fill,
+                ForeColor = Color.White
+            };
         }
     }
 }
