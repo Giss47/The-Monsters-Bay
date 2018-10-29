@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
+using System.Media;
 
 
 namespace Butik
@@ -15,12 +16,21 @@ namespace Butik
         static TableLayoutPanel mainPanel;
         static FlowLayoutPanel bayPanel;
         static FlowLayoutPanel productPanel;
+        static bool MusicON = true;
+        private Button musicONOFF;
+        static SoundPlayer WannaRock = new SoundPlayer
+        {
+            SoundLocation = @"resources\WR.wav"
+        };
 
         private static string[] stringProducts = File.ReadAllLines("Trucks.csv");
         private Product[] products = new Product[stringProducts.Length];
 
         public MyForm()
         {
+            WannaRock.PlayLooping();
+
+
             for (int i = 0; i < products.Length; i++)
             {
                 string[] p = stringProducts[i].Split(';');
@@ -29,7 +39,7 @@ namespace Butik
 
             MinimumSize = new Size(585, 310);
             Width = 1330;
-            Height = 685;
+            Height = 700;
             Text = "The Monsters Bay";
             Icon = new Icon("resources/icon.ico");
             BackColor = Color.White;
@@ -41,10 +51,11 @@ namespace Butik
             {
                 Dock = DockStyle.Fill,
                 ColumnCount = 2,
-                RowCount = 2
+                RowCount = 3
             };
             mainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             mainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
+            mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
             mainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             Controls.Add(mainPanel);
@@ -56,7 +67,13 @@ namespace Butik
                 Text = "Welcome to \"The Monsters Bay\"",
                 Dock = DockStyle.Fill
             };
+            mainPanel.SetRowSpan(titleLabel, 2);
             mainPanel.Controls.Add(titleLabel);
+
+
+            musicONOFF = new Button { Text = "Music OFF",  Anchor = AnchorStyles.Right };
+            mainPanel.Controls.Add(musicONOFF);           
+            musicONOFF.Click += MusicONOFFClick;
 
             Label cartLabel = new Label()
             {
@@ -65,6 +82,7 @@ namespace Butik
                 Text = "The Shopping Cart",
                 Dock = DockStyle.Fill
             };
+            mainPanel.SetCellPosition(cartLabel, new TableLayoutPanelCellPosition(1, 1));
             mainPanel.Controls.Add(cartLabel);
 
             bayPanel = new FlowLayoutPanel()
@@ -76,7 +94,7 @@ namespace Butik
                 BackgroundImage = Image.FromFile(@"resources\backgrounds\2001.png"),
                 BackgroundImageLayout = ImageLayout.Stretch
             };
-            mainPanel.SetCellPosition(bayPanel, new TableLayoutPanelCellPosition(0, 1));
+            mainPanel.SetCellPosition(bayPanel, new TableLayoutPanelCellPosition(0, 2));
             mainPanel.Controls.Add(bayPanel);
             foreach (Product p in products)
             {
@@ -84,17 +102,35 @@ namespace Butik
             }
 
             TableLayoutPanel cartPanel = new Cart();
-            mainPanel.SetCellPosition(cartPanel, new TableLayoutPanelCellPosition(1, 1));
+            mainPanel.SetCellPosition(cartPanel, new TableLayoutPanelCellPosition(1, 2));
             mainPanel.Controls.Add(cartPanel);
             
             FormClosing += MyForm_FormClosing;
+        }
+
+        private void MusicONOFFClick(object sender, EventArgs e)
+        {
+            Button b = sender as Button;
+            if(MusicON)
+            {
+                WannaRock.Stop();
+                MusicON = false;
+                b.Text = "Music ON";
+
+            }
+            else
+            {
+                WannaRock.PlayLooping();
+                MusicON = true;
+                b.Text = "Music OFF";
+            }
         }
 
         public static void InsertProductPanel(FlowLayoutPanel panel)
         {
             productPanel = panel;
             bayPanel.Hide();
-            mainPanel.SetCellPosition(productPanel, new TableLayoutPanelCellPosition(0, 1));
+            mainPanel.SetCellPosition(productPanel, new TableLayoutPanelCellPosition(0,2));
             mainPanel.Controls.Add(productPanel);
         }
 
