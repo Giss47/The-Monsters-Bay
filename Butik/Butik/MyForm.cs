@@ -13,23 +13,23 @@ namespace Butik
 {
     class MyForm : Form
     {
-        static TableLayoutPanel mainPanel;
-        static FlowLayoutPanel bayPanel;
-        static FlowLayoutPanel productPanel;
-        static bool MusicON = true;
-        private Button musicONOFF;
-        static SoundPlayer WannaRock = new SoundPlayer
+        private static TableLayoutPanel mainPanel;
+        private static FlowLayoutPanel bayPanel;
+        private static FlowLayoutPanel productPanel;
+
+        private static bool MusicON = true;
+        private static Button musicONOFF;
+        private static SoundPlayer WannaRock = new SoundPlayer
         {
             SoundLocation = @"resources\WR.wav"
         };
 
         private static string[] stringProducts = File.ReadAllLines("Trucks.csv");
-        private Product[] products = new Product[stringProducts.Length];
+        private static Product[] products = new Product[stringProducts.Length];
 
         public MyForm()
         {
             WannaRock.PlayLooping();
-
 
             for (int i = 0; i < products.Length; i++)
             {
@@ -38,14 +38,12 @@ namespace Butik
             }
 
             MinimumSize = new Size(585, 310);
-            Width = 1330;
+            Width = 1240;
             Height = 700;
             Text = "The Monsters Bay";
             Icon = new Icon("resources/icon.ico");
-            BackColor = Color.White;
             StartPosition = FormStartPosition.CenterScreen;
             Padding = new Padding(5);
-            BackColor = Color.LightGray;
             
             mainPanel = new TableLayoutPanel()
             {
@@ -59,29 +57,16 @@ namespace Butik
             mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
             mainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             Controls.Add(mainPanel);
-
-            Label titleLabel = new Label()
-            {
-                Font = new Font("Arial", 18),
-                TextAlign = ContentAlignment.MiddleLeft,
-                Text = "Welcome to \"The Monsters Bay\"",
-                Dock = DockStyle.Fill
-            };
+            
+            Label titleLabel = CreateLabel("Welcome to\r\nThe Monsters Bay", 18, ContentAlignment.MiddleLeft);
             mainPanel.SetRowSpan(titleLabel, 2);
             mainPanel.Controls.Add(titleLabel);
-
 
             musicONOFF = new Button { Text = "Music OFF",  Anchor = AnchorStyles.Right };
             mainPanel.Controls.Add(musicONOFF);           
             musicONOFF.Click += MusicONOFFClick;
 
-            Label cartLabel = new Label()
-            {
-                Font = new Font("Arial", 14),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Text = "The Shopping Cart",
-                Dock = DockStyle.Fill
-            };
+            Label cartLabel = CreateLabel("Shopping cart", 14, ContentAlignment.MiddleCenter);
             mainPanel.SetCellPosition(cartLabel, new TableLayoutPanelCellPosition(1, 1));
             mainPanel.Controls.Add(cartLabel);
 
@@ -105,10 +90,21 @@ namespace Butik
             mainPanel.SetCellPosition(cartPanel, new TableLayoutPanelCellPosition(1, 2));
             mainPanel.Controls.Add(cartPanel);
             
-            FormClosing += MyForm_FormClosing;
+            FormClosing += MyFormClosing;
         }
 
-        private void MusicONOFFClick(object sender, EventArgs e)
+        private static Label CreateLabel(string text, int size, ContentAlignment align)
+        {
+            return new Label()
+            {
+                Text = text,
+                Font = new Font("Arial", size),
+                TextAlign = align,
+                Dock = DockStyle.Fill
+            };
+        }
+
+        private static void MusicONOFFClick(object sender, EventArgs e)
         {
             Button b = sender as Button;
             if(MusicON)
@@ -116,7 +112,6 @@ namespace Butik
                 WannaRock.Stop();
                 MusicON = false;
                 b.Text = "Music ON";
-
             }
             else
             {
@@ -140,7 +135,7 @@ namespace Butik
             bayPanel.Show();
         }
 
-        private void MyForm_FormClosing(object sender, FormClosingEventArgs e)
+        private static void MyFormClosing(object sender, FormClosingEventArgs e)
         {
             string message = "Are you sure  you would like to exit The Monsters Bay?";
             string caption = "Exit";

@@ -13,18 +13,27 @@ namespace Butik
     class CartProduct
     {
         public string Name { get; private set; }
-        public int Quantity { get; set; }
+        public int Quantity { get; private set; }
+        public double Cost { get; private set; }
 
         [System.ComponentModel.Browsable(false)]
         public double Price { get; private set; }
-
-        public double Cost { get; set; }
-
+        
         public CartProduct(string name, int quantity, double price)
         {
             Name = name;
             Quantity = quantity;
             Price = price;
+            Cost = Quantity * Price;
+        }
+
+        public void IncreaseQuantity()
+        {
+            Quantity++;
+        }
+
+        public void RecalculateCost()
+        {
             Cost = Quantity * Price;
         }
     }
@@ -157,6 +166,7 @@ namespace Butik
 
             return panel;
         }
+
         private static Button CreateButton(string text)
         {
             return new Button()
@@ -166,6 +176,7 @@ namespace Butik
                 Cursor = Cursors.Hand
             };
         }
+
         private static Label CreateLabel(string text, ContentAlignment align, Color color)
         {
             return new Label()
@@ -181,41 +192,48 @@ namespace Butik
         // Operation methods
         public static void AddProduct(Product product)
         {
-            bool productCheck = false;
+            bool productExists = false;
             
             foreach (CartProduct c in cart)
             {
                 if (product.Name == c.Name)
                 {
-                    productCheck = true;
-                    c.Quantity++;
-                    c.Cost = c.Price * c.Quantity;
+                    productExists = true;
+                    c.IncreaseQuantity();
+                    c.RecalculateCost();
                 }
             }
-            if (!productCheck)
+            if (!productExists)
             {
                 cart.Add(new CartProduct(product.Name, 1, product.Price));
             }
+
             SaveToFile();
-            totalCost = 0;
-            foreach (CartProduct p in cart)
-            {
-                totalCost += p.Cost;
-            }
-            priceLabel.Text = "$" + totalCost;
-            
+            RecalculateTotalCost();
             RefreshDataGrid();
         }
+
         private static void SaveToFile()
         {
             List<string> cartString = new List<string> { };
             cart.ForEach(p => cartString.Add(p.Name + ";" + p.Quantity + ";" + p.Price));
             File.WriteAllLines(cartFile, cartString);
         }
+
         private static void RefreshDataGrid()
         {
             productGrid.DataSource = null;
             productGrid.DataSource = cart;
+        }
+
+        private static void RecalculateTotalCost()
+        {
+            totalCost = 0;
+            foreach (CartProduct p in cart)
+            {
+                totalCost += p.Cost;
+            }
+            priceLabel.Text = "$" + totalCost;
         }
 
         // Eventlisteners
@@ -225,18 +243,15 @@ namespace Butik
             cart.Remove(cart[i]);
             RefreshDataGrid();
             SaveToFile();
-            totalCost = 0;
-            foreach (CartProduct p in cart)
-            {
-                totalCost += p.Cost;
-            }
-            priceLabel.Text = "$" + totalCost;
+            RecalculateTotalCost();
         }
+
         private static void DiscountTextBoxClick(object sender, EventArgs e)
         {
             TextBox t = (TextBox)sender;
             t.Text = "";
         }
+
         private static void SubmitDiscountButtonClick(object sender, EventArgs e)
         {
             Button submit = sender as Button; // to be able to disable the button after using
@@ -283,28 +298,30 @@ namespace Butik
             }
 
         }
+
         private static void ClearCart(object sender, EventArgs e)
         {
             cart.Clear();
-            totalCost = 0;
             totalDiscount = 0;
-            priceLabel.Text = "$" + totalCost;
             discountLabel.Text = "$" + totalDiscount;
+            
             if (File.Exists(cartFile))
             {
                 File.Delete(cartFile);
             }
 
+            RecalculateTotalCost();
             RefreshDataGrid();
         }
+
         private static void PlaceOrderButtonClick(object sender, EventArgs e1)
         {
             if (cart.Count != 0)
             {
-
                 string receipt = "Your order has been placed.\r\n" +
                     "\r\n\r\n" +
                     "Qty:\tProduct\t\tUnit price:\tAmount:\r\n";
+
                 foreach (CartProduct p in cart)
                 {
                     string doubleTab = "\t";
