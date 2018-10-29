@@ -25,7 +25,6 @@ namespace Butik
 
         public FlowLayoutPanel GetInfoPanel()
         {
-
             FlowLayoutPanel panel = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -122,7 +121,7 @@ namespace Butik
                 ColumnCount = 2,
                 RowCount = 2,
                 Width = 220,
-                Height = 185,
+                Height = 180,
                 BackColor = Color.Transparent
             };
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 68));
