@@ -80,7 +80,7 @@ namespace Butik
             mainPanel.Controls.Add(bayPanel);
             foreach (Product p in products)
             {
-                bayPanel.Controls.Add(p.GetPictureBox());
+                bayPanel.Controls.Add(p.GetProductPanel());
             }
 
             TableLayoutPanel cartPanel = new Cart();

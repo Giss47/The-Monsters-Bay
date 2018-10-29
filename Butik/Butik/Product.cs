@@ -115,18 +115,34 @@ namespace Butik
             return panel;
         }
 
-        public PictureBox GetPictureBox()
+        public TableLayoutPanel GetProductPanel()
         {
-            ToolTip popUp = new ToolTip();
+            TableLayoutPanel panel = new TableLayoutPanel()
+            {
+                ColumnCount = 2,
+                RowCount = 2,
+                Width = 220,
+                Height = 185,
+                BackColor = Color.Transparent
+            };
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 68));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 32));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 150));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20));
+
             PictureBox box = new PictureBox()
             {
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 Image = Image.FromFile(ImageLocation),
-                Size = new Size(200, 150),
-                Margin = new Padding(20),
                 Cursor = Cursors.Hand,
-                Padding = new Padding(5)
+                Dock = DockStyle.Fill,
+                Padding = new Padding(3),
+                BackColor = Color.LightGray
             };
+            panel.SetColumnSpan(box, 2);
+            panel.Controls.Add(box);
+
+            ToolTip popUp = new ToolTip();
             popUp.SetToolTip(box, "Click to view details");
 
             box.Click += (s, e) =>
@@ -142,7 +158,27 @@ namespace Butik
                 box.BackColor = Color.LightGray;
             };
 
-            return box;
+            Label productLabel = new Label()
+            {
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                Text = Name,
+                TextAlign = ContentAlignment.TopLeft,
+                Dock = DockStyle.Fill,
+                ForeColor = Color.White
+            };
+            panel.Controls.Add(productLabel);
+
+            Label priceLabel = new Label()
+            {
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                Text = "$" + Convert.ToString(Price),
+                TextAlign = ContentAlignment.TopRight,
+                Dock = DockStyle.Fill,
+                ForeColor = Color.White
+            };
+            panel.Controls.Add(priceLabel);
+
+            return panel;
         }
     }
 }
