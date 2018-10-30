@@ -67,8 +67,7 @@ namespace Butik
             musicONOFF.Click += MusicONOFFClick;
 
             Label cartLabel = CreateLabel("Shopping cart", 14, ContentAlignment.MiddleCenter);
-            mainPanel.SetCellPosition(cartLabel, new TableLayoutPanelCellPosition(1, 1));
-            mainPanel.Controls.Add(cartLabel);
+            mainPanel.Controls.Add(cartLabel, 1, 1);
 
             bayPanel = new FlowLayoutPanel()
             {
@@ -79,16 +78,14 @@ namespace Butik
                 BackgroundImage = Image.FromFile(@"resources\backgrounds\2001.png"),
                 BackgroundImageLayout = ImageLayout.Stretch
             };
-            mainPanel.SetCellPosition(bayPanel, new TableLayoutPanelCellPosition(0, 2));
-            mainPanel.Controls.Add(bayPanel);
+            mainPanel.Controls.Add(bayPanel, 0, 2);
             foreach (Product p in products)
             {
                 bayPanel.Controls.Add(p.GetProductPanel());
             }
 
             TableLayoutPanel cartPanel = new Cart();
-            mainPanel.SetCellPosition(cartPanel, new TableLayoutPanelCellPosition(1, 2));
-            mainPanel.Controls.Add(cartPanel);
+            mainPanel.Controls.Add(cartPanel, 1, 2);
             
             FormClosing += MyFormClosing;
         }
@@ -125,8 +122,7 @@ namespace Butik
         {
             productPanel = panel;
             bayPanel.Hide();
-            mainPanel.SetCellPosition(productPanel, new TableLayoutPanelCellPosition(0,2));
-            mainPanel.Controls.Add(productPanel);
+            mainPanel.Controls.Add(productPanel, 0, 2);
         }
 
         public static void InsertBayPanel()
