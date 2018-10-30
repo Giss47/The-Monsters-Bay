@@ -29,14 +29,33 @@ namespace Butik
 
         public MyForm()
         {
-            WannaRock.PlayLooping();
+           
+            int count = 0;
+            string errorLines = "";
+            for (int i = 0; i < stringProducts.Length; i++)
+            {   
+               string[] p = stringProducts[i].Split(';');
 
-            for (int i = 0; i < products.Length; i++)
+                if (p.Length < 4)
+                {
+                    errorLines += " . " + (i+1);
+                    Array.Resize(ref products, products.Length - 1);
+                }
+                else
+                {
+                    products[count] = new Product(p[0], int.Parse(p[1]), p[2], p[3]);
+
+                    count++;
+                }               
+            }
+            if (errorLines != "")
             {
-                string[] p = stringProducts[i].Split(';');
-                products[i] = new Product(p[0], int.Parse(p[1]), p[2], p[3]);
+                MessageBox.Show("\tWarning! " +
+                                "\nInformation missing in products file, " +
+                                "Line/Lines: " + errorLines);
             }
 
+            WannaRock.PlayLooping();
             MinimumSize = new Size(585, 310);
             Width = 1240;
             Height = 700;

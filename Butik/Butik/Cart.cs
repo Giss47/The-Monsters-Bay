@@ -68,10 +68,15 @@ namespace Butik
             {
                 string[] getDiscountCodes = File.ReadAllLines("DiscountList.csv");
 
+
+
                 foreach (string s in getDiscountCodes)
                 {
                     string[] codes = s.Split(',');
+                    if (!(codes[0] == "" ) && !(codes[1] == ""))
+                    {
                     discountCodes.Add(codes[0], int.Parse(codes[1]));
+                    }
                 }
             }
 
@@ -89,8 +94,7 @@ namespace Butik
 
             productGrid = new DataGridView()
             {
-                Dock = DockStyle.Fill,
-                DataSource = cart,
+                Dock = DockStyle.Fill,               
                 RowHeadersVisible = false,
                 CellBorderStyle = DataGridViewCellBorderStyle.None,
                 AllowUserToResizeColumns = false,
@@ -98,6 +102,10 @@ namespace Butik
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 ReadOnly = true
             };
+            if(!(cart.Count == 0))
+            {
+                productGrid.DataSource = cart;
+            }
             SetColumnSpan(productGrid, 3);
             Controls.Add(productGrid);
 
@@ -239,11 +247,16 @@ namespace Butik
         // Eventlisteners
         private static void RemoveButtonClick(object sender, EventArgs e)
         {
-            int i = productGrid.CurrentCell.RowIndex;
-            cart.Remove(cart[i]);
-            RefreshDataGrid();
-            SaveToFile();
-            RecalculateTotalCost();
+            if(!(cart.Count == 0))
+            {
+                int i = productGrid.CurrentCell.RowIndex;
+                cart.Remove(cart[i]);
+                RefreshDataGrid();
+                SaveToFile();
+                RecalculateTotalCost();
+            }
+
+            
         }
 
         private static void DiscountTextBoxClick(object sender, EventArgs e)
