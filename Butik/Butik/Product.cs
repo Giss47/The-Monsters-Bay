@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace Butik
@@ -23,10 +18,86 @@ namespace Butik
             ImageLocation = image;
         }
 
-        // Get panels-methods
+        // Get Product's Panel (Image, Name, Price).
+        public TableLayoutPanel GetProductPanel()
+        {
+            var panel = new TableLayoutPanel()
+            {
+                ColumnCount = 2,
+                RowCount = 2,
+                Width = 220,
+                Height = 180,
+                BackColor = Color.Transparent
+            };
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 68));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 32));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 150));
+            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20));
+
+            try
+            {
+                var box = new PictureBox()
+                {
+                    SizeMode = PictureBoxSizeMode.StretchImage,
+                    Image = Image.FromFile(ImageLocation),
+                    Cursor = Cursors.Hand,
+                    Dock = DockStyle.Fill,
+                    Padding = new Padding(3),
+                    BackColor = Color.LightGray
+                };
+                panel.SetColumnSpan(box, 2);
+                panel.Controls.Add(box);
+                ToolTip popUp = new ToolTip();
+                popUp.SetToolTip(box, "Click to view details");
+                box.Click += (s, e) => { MyForm.InsertProductInfoPanel(GetInfoPanel()); };
+                box.MouseHover += (s, e) => { box.BackColor = Color.Red; };
+                box.MouseLeave += (s, e) => { box.BackColor = Color.LightGray; };
+            }
+            catch
+            {
+                MessageBox.Show("Image not found \nCheck products file or image directory");
+                var box = new PictureBox()
+                {
+                    SizeMode = PictureBoxSizeMode.StretchImage,
+                    Cursor = Cursors.Hand,
+                    Dock = DockStyle.Fill,
+                    Padding = new Padding(3),
+                    BackColor = Color.LightGray
+                };
+                panel.SetColumnSpan(box, 2);
+                panel.Controls.Add(box);
+                ToolTip popUp = new ToolTip();
+                popUp.SetToolTip(box, "Click to view details");
+                box.Click += (s, e) => { MyForm.InsertProductInfoPanel(GetInfoPanel()); };
+            }
+
+
+
+            panel.Controls.Add(CreateProductPanelLabel(Name, ContentAlignment.TopLeft));
+
+            panel.Controls.Add(CreateProductPanelLabel("$" + Price, ContentAlignment.TopRight));
+
+            return panel;
+        }
+        // Get controls-method - Product's Panel.
+        private static Label CreateProductPanelLabel(string text, ContentAlignment align)
+        {
+            return new Label()
+            {
+                Font = new Font("Arial", 10, FontStyle.Bold),
+                Text = text,
+                TextAlign = align,
+                Dock = DockStyle.Fill,
+                ForeColor = Color.White
+            };
+        }
+
+
+
+        // Get product's Info panel and funcionality.
         public FlowLayoutPanel GetInfoPanel()
         {
-            FlowLayoutPanel panel = new FlowLayoutPanel
+            var panel = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 AutoSize = true,
@@ -35,9 +106,12 @@ namespace Butik
                 BackgroundImageLayout = ImageLayout.Stretch
             };
 
+
+
+            // In case image is missing or direcory is writen wrong.
             try
             {
-                PictureBox picBox = new PictureBox()
+                var picBox = new PictureBox()
                 {
                     Image = Image.FromFile(ImageLocation),
                     SizeMode = PictureBoxSizeMode.Zoom,
@@ -49,8 +123,8 @@ namespace Butik
             }
             catch
             {
-                PictureBox picBox = new PictureBox()
-                {                       
+                var picBox = new PictureBox()
+                {
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BackColor = Color.Transparent,
                     Width = 400,
@@ -59,7 +133,7 @@ namespace Butik
                 panel.Controls.Add(picBox);
             }
 
-            TableLayoutPanel table = new TableLayoutPanel()
+            var table = new TableLayoutPanel()
             {
                 ColumnCount = 2,
                 RowCount = 4,
@@ -87,7 +161,7 @@ namespace Butik
             table.SetColumnSpan(price, 2);
 
             Button back = CreateInfoPanelButton("Back");
-            back.Click += (s, e) => { MyForm.InsertBayPanel(); };
+            back.Click += (s, e) => { MyForm.InsertBayPanel();};
             table.Controls.Add(back);
 
             Button addToCart = CreateInfoPanelButton("Add to cart");
@@ -97,68 +171,7 @@ namespace Butik
             return panel;
         }
 
-        public TableLayoutPanel GetProductPanel()
-        {
-            TableLayoutPanel panel = new TableLayoutPanel()
-            {
-                ColumnCount = 2,
-                RowCount = 2,
-                Width = 220,
-                Height = 180,
-                BackColor = Color.Transparent
-            };
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 68));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 32));
-            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 150));
-            panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20));
-
-            try
-            {
-                PictureBox box = new PictureBox()
-                {
-                    SizeMode = PictureBoxSizeMode.StretchImage,
-                    Image = Image.FromFile(ImageLocation),
-                    Cursor = Cursors.Hand,
-                    Dock = DockStyle.Fill,
-                    Padding = new Padding(3),
-                    BackColor = Color.LightGray
-                };
-                panel.SetColumnSpan(box, 2);
-                panel.Controls.Add(box);
-                ToolTip popUp = new ToolTip();
-                popUp.SetToolTip(box, "Click to view details");
-                box.Click += (s, e) => { MyForm.InsertProductPanel(GetInfoPanel()); };
-                box.MouseHover += (s, e) => { box.BackColor = Color.Red; };
-                box.MouseLeave += (s, e) => { box.BackColor = Color.LightGray; };
-            }
-            catch
-            {
-                MessageBox.Show("Image not found \nCheck products file or image directory");
-                PictureBox box = new PictureBox()
-                {
-                    SizeMode = PictureBoxSizeMode.StretchImage,                    
-                    Cursor = Cursors.Hand,
-                    Dock = DockStyle.Fill,
-                    Padding = new Padding(3),
-                    BackColor = Color.LightGray
-                };
-                panel.SetColumnSpan(box, 2);
-                panel.Controls.Add(box);
-                ToolTip popUp = new ToolTip();
-                popUp.SetToolTip(box, "Click to view details");
-                box.Click += (s, e) => { MyForm.InsertProductPanel(GetInfoPanel()); };
-            }
-
-            
-            
-            panel.Controls.Add(CreateProductPanelLabel(Name, ContentAlignment.TopLeft));
-
-            panel.Controls.Add(CreateProductPanelLabel("$" + Price, ContentAlignment.TopRight));
-
-            return panel;
-        }
-
-        // Get controls-methods
+        // Get controls-methods - Info Panel.
         private static Label CreateInfoPanelLabel(string text, int size, ContentAlignment align)
         {
             return new Label()
@@ -181,16 +194,6 @@ namespace Butik
             };
         }
 
-        private static Label CreateProductPanelLabel(string text, ContentAlignment align)
-        {
-            return new Label()
-            {
-                Font = new Font("Arial", 10, FontStyle.Bold),
-                Text = text,
-                TextAlign = align,
-                Dock = DockStyle.Fill,
-                ForeColor = Color.White
-            };
-        }
+
     }
 }

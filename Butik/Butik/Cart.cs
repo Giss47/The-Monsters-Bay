@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Printing;
@@ -58,7 +56,7 @@ namespace Butik
             {
                 string[] temp = File.ReadAllLines(cartFile);
 
-                foreach (string s in temp)
+                foreach (var s in temp)
                 {
                     string[] p = s.Split(';');
                     cart.Add(new CartProduct(p[0], int.Parse(p[1]), double.Parse(p[2])));
@@ -67,10 +65,7 @@ namespace Butik
             if (File.Exists("DiscountList.csv"))
             {
                 string[] getDiscountCodes = File.ReadAllLines("DiscountList.csv");
-
-
-
-                foreach (string s in getDiscountCodes)
+                foreach (var s in getDiscountCodes)
                 {
                     string[] codes = s.Split(',');
                     if (!(codes[0] == "" ) && !(codes[1] == ""))
@@ -102,6 +97,7 @@ namespace Butik
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 ReadOnly = true
             };
+
             if(!(cart.Count == 0))
             {
                 productGrid.DataSource = cart;
@@ -114,10 +110,10 @@ namespace Butik
             SetColumnSpan(checkoutBox, 3);
         }
 
-        // Control methods
+        // Control methods.
         private static TableLayoutPanel CreateCheckoutBox()
         {
-            TableLayoutPanel panel = new TableLayoutPanel()
+            var panel = new TableLayoutPanel()
             {
                 ColumnCount = 3,
                 RowCount = 4,
@@ -197,12 +193,12 @@ namespace Butik
             };
         }
 
-        // Operation methods
+        // Operation methods.
         public static void AddProduct(Product product)
         {
             bool productExists = false;
             
-            foreach (CartProduct c in cart)
+            foreach (var c in cart)
             {
                 if (product.Name == c.Name)
                 {
@@ -237,14 +233,14 @@ namespace Butik
         private static void RecalculateTotalCost()
         {
             totalCost = 0;
-            foreach (CartProduct p in cart)
+            foreach (var p in cart)
             {
                 totalCost += p.Cost;
             }
             priceLabel.Text = "$" + totalCost;
         }
 
-        // Eventlisteners
+        // Eventlisteners.
         private static void RemoveButtonClick(object sender, EventArgs e)
         {
             if(!(cart.Count == 0))
@@ -261,18 +257,18 @@ namespace Butik
 
         private static void DiscountTextBoxClick(object sender, EventArgs e)
         {
-            TextBox t = (TextBox)sender;
+            var t = (TextBox)sender;
             t.Text = "";
         }
 
         private static void SubmitDiscountButtonClick(object sender, EventArgs e)
         {
-            Button submit = sender as Button; // to be able to disable the button after using
+            var submit = sender as Button; 
             string keyCeck = "";
             double valueCheck = 0;
 
             string message = "Make sure you finished buying before using your discount code!" +
-                             "\n Would you like to proceed?"; // checking with customrer before using the code
+                             "\n Would you like to proceed?"; 
             string caption = "";
             DialogResult result = MessageBox.Show(message, caption,
                                          MessageBoxButtons.YesNo,
@@ -302,10 +298,12 @@ namespace Butik
                 totalCost -= totalDiscount;
                 priceLabel.Text = "$" + totalCost;
                 discountLabel.Text = "-$" + totalDiscount;
-                string[] temp = File.ReadLines("DiscountList.csv").Where(l => l != $"{keyCeck},{valueCheck}").ToArray();
+
+                // Erasing Discount Code from file.
+                string[] temp = File.ReadLines("DiscountList.csv").Where(d => d != $"{keyCeck},{valueCheck}").ToArray();
                 File.WriteAllLines("DiscountList.csv", temp);
                 discountCodes.Remove(keyCeck);
-                submit.Enabled = false; // disable the button once used
+                submit.Enabled = false; 
 
                 RefreshDataGrid();
             }
@@ -333,14 +331,14 @@ namespace Butik
             {
                 string receipt = "Your order has been placed.\r\n" +
                     "\r\n\r\n" +
-                    "Qty:\tProduct\t\tUnit price:\tAmount:\r\n";
+                    "Qty:\tProduct\t\tUnit price:\tCost:\r\n";
 
-                foreach (CartProduct p in cart)
+                foreach (var p in cart)
                 {
-                    string doubleTab = "\t";
+                    var doubleTab = "\t";
                     if (p.Name.Length < 8)
                         doubleTab = "\t\t";
-                    receipt += string.Format("{0}\t{1}" + doubleTab + "${2}\t\t{3}\r\n", p.Quantity, p.Name, p.Price, p.Price * p.Quantity);
+                    receipt += string.Format("{0}\t{1}" + doubleTab + "${2}\t\t${3}\r\n", p.Quantity, p.Name, p.Price, (p.Price * p.Quantity));
                 }
                 receipt += "\r\n \t\t\tTotal price: $" + totalCost;
 
@@ -349,7 +347,7 @@ namespace Butik
                         "Receipt",
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Question,
-                        MessageBoxDefaultButton.Button1
+                        MessageBoxDefaultButton.Button2
                         );
 
                 if (result == DialogResult.Yes)
