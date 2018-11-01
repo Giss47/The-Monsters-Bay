@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
+using System.Linq;
 using System.Media;
 
 
@@ -69,13 +70,26 @@ namespace Butik
             mainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             Controls.Add(mainPanel);
 
-            Label titleLabel = CreateLabel("Welcome to\r\nThe Monsters Bay", 18, ContentAlignment.MiddleLeft);
-            mainPanel.SetRowSpan(titleLabel, 2);
-            mainPanel.Controls.Add(titleLabel);
+            ComboBox sort = new ComboBox()
+            {
+                Anchor = AnchorStyles.Right,
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+            sort.Items.Add("Sort by:");
+            sort.Items.Add("Price - ascending");
+            sort.Items.Add("Price - descending");
+            sort.Items.Add("Name - ascending");
+            sort.Items.Add("Name - descending");
+            sort.SelectedIndex = 0;
+            sort.SelectedIndexChanged += SortProducts;
+            mainPanel.Controls.Add(sort);
 
             musicONOFF = new Button { Text = "Music OFF", Anchor = AnchorStyles.Right };
             mainPanel.Controls.Add(musicONOFF);
             musicONOFF.Click += MusicONOFFClick;
+
+            Label titleLabel = CreateLabel("Welcome to the Monsters Bay", 18, ContentAlignment.MiddleLeft);
+            mainPanel.Controls.Add(titleLabel);
 
             Label cartLabel = CreateLabel("Shopping cart", 14, ContentAlignment.MiddleCenter);
             mainPanel.Controls.Add(cartLabel, 1, 1);
@@ -102,7 +116,7 @@ namespace Butik
             FormClosing += MyFormClosing;
         }
 
-        private static Label CreateLabel(string text, int size, ContentAlignment align)
+        private Label CreateLabel(string text, int size, ContentAlignment align)
         {
             return new Label()
             {
@@ -111,23 +125,6 @@ namespace Butik
                 TextAlign = align,
                 Dock = DockStyle.Fill
             };
-        }
-
-        private static void MusicONOFFClick(object sender, EventArgs e)
-        {
-            var b = sender as Button;
-            if (MusicON)
-            {
-                WannaRock.Stop();
-                MusicON = false;
-                b.Text = "Music ON";
-            }
-            else
-            {
-                WannaRock.PlayLooping();
-                MusicON = true;
-                b.Text = "Music OFF";
-            }
         }
 
         // Applied in Product Class EventHandler.
@@ -145,7 +142,54 @@ namespace Butik
             bayPanel.Show();
         }
 
-        private static void MyFormClosing(object sender, FormClosingEventArgs e)
+        private void SortProducts(object sender, EventArgs e)
+        {
+            ComboBox c = (ComboBox)sender;
+            Product[] sortedArray = new Product[] { };
+            if (c.SelectedIndex == 0)
+            { return; }
+            else if (c.SelectedIndex == 1)
+            {
+                sortedArray = products.OrderBy(p => p.Price).ToArray();
+            }
+            else if (c.SelectedIndex == 2)
+            {
+                sortedArray = products.OrderByDescending(p => p.Price).ToArray();
+            }
+            else if (c.SelectedIndex == 3)
+            {
+                sortedArray = products.OrderBy(p => p.Name).ToArray();
+            }
+            else
+            {
+                sortedArray = products.OrderByDescending(p => p.Name).ToArray();
+            }
+
+            bayPanel.Controls.Clear();
+            foreach (var p in sortedArray)
+            {
+                bayPanel.Controls.Add(p.GetProductPanel());
+            }
+        }
+
+        private void MusicONOFFClick(object sender, EventArgs e)
+        {
+            var b = sender as Button;
+            if (MusicON)
+            {
+                WannaRock.Stop();
+                MusicON = false;
+                b.Text = "Music ON";
+            }
+            else
+            {
+                WannaRock.PlayLooping();
+                MusicON = true;
+                b.Text = "Music OFF";
+            }
+        }
+
+        private void MyFormClosing(object sender, FormClosingEventArgs e)
         {
             var message = "Are you sure  you would like to exit The Monsters Bay?";
             var caption = "Exit";

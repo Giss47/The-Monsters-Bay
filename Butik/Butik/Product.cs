@@ -80,7 +80,7 @@ namespace Butik
             return panel;
         }
         // Get controls-method - Product's Panel.
-        private static Label CreateProductPanelLabel(string text, ContentAlignment align)
+        private Label CreateProductPanelLabel(string text, ContentAlignment align)
         {
             return new Label()
             {
@@ -172,7 +172,7 @@ namespace Butik
         }
 
         // Get controls-methods - Info Panel.
-        private static Label CreateInfoPanelLabel(string text, int size, ContentAlignment align)
+        private Label CreateInfoPanelLabel(string text, int size, ContentAlignment align)
         {
             return new Label()
             {
@@ -185,7 +185,7 @@ namespace Butik
             };
         }
 
-        private static Button CreateInfoPanelButton(string text)
+        private Button CreateInfoPanelButton(string text)
         {
             return new Button()
             {
