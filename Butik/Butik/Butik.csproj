@@ -48,7 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cart.cs" />
+    <Compile Include="Cart.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CartProduct.cs" />
+    <Compile Include="Data.cs" />
     <Compile Include="MyForm.cs">
       <SubType>Form</SubType>
     </Compile>
