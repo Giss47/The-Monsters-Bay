@@ -35,16 +35,16 @@ namespace Butik
 
             data.cart.ForEach(p => totalCost += p.Cost);
 
-            cartGrid = CreatCartGrid();
+            cartGrid = CreateCartGrid();
             SetColumnSpan(cartGrid, 3);
             Controls.Add(cartGrid);
 
-            checkOutCalculationsCorner = CreateCheckouCalculationsCorner();
+            checkOutCalculationsCorner = CreateCheckoutCalculationsCorner();
             SetColumnSpan(checkOutCalculationsCorner, 3);
             Controls.Add(checkOutCalculationsCorner);
         }
 
-        private DataGridView CreatCartGrid()
+        private DataGridView CreateCartGrid()
         {
             var cartGrid = new DataGridView()
             {
@@ -66,7 +66,7 @@ namespace Butik
 
         // -------- Cart Side Components ------- //
 
-        private TableLayoutPanel CreateCheckouCalculationsCorner()
+        private TableLayoutPanel CreateCheckoutCalculationsCorner()
         {
             var panel = new TableLayoutPanel()
             {
