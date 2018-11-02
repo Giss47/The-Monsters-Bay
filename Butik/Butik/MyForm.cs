@@ -190,42 +190,29 @@ namespace Butik
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 150));
             panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20));
 
+            var box = new PictureBox()
+            {
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                Cursor = Cursors.Hand,
+                Dock = DockStyle.Fill,
+                Padding = new Padding(3),
+                BackColor = Color.LightGray
+            };
+            panel.SetColumnSpan(box, 2);
+            panel.Controls.Add(box);
+            ToolTip popUp = new ToolTip();
+            popUp.SetToolTip(box, "Click to view details");
+
+            box.Click += (s, e) => { ShowProductDetailsPanel(GetProductDetailsPanel(p)); };
             try
             {
-                var box = new PictureBox()
-                {
-                    SizeMode = PictureBoxSizeMode.StretchImage,
-                    Image = Image.FromFile(p.ImageLocation),
-                    Cursor = Cursors.Hand,
-                    Dock = DockStyle.Fill,
-                    Padding = new Padding(3),
-                    BackColor = Color.LightGray
-                };
-                panel.SetColumnSpan(box, 2);
-                panel.Controls.Add(box);
-                ToolTip popUp = new ToolTip();
-                popUp.SetToolTip(box, "Click to view details");
-
-                box.Click += (s, e) => { ShowProductDetailsPanel(GetProductDetailsPanel(p)); };
+                box.Image = Image.FromFile(p.ImageLocation);
                 box.MouseHover += (s, e) => { box.BackColor = Color.Red; };
                 box.MouseLeave += (s, e) => { box.BackColor = Color.LightGray; };
             }
-            catch
+            catch (System.IO.FileNotFoundException)
             {
                 MessageBox.Show("Image not found \nCheck products file or image directory");
-                var box = new PictureBox()
-                {
-                    SizeMode = PictureBoxSizeMode.StretchImage,
-                    Cursor = Cursors.Hand,
-                    Dock = DockStyle.Fill,
-                    Padding = new Padding(3),
-                    BackColor = Color.LightGray
-                };
-                panel.SetColumnSpan(box, 2);
-                panel.Controls.Add(box);
-                ToolTip popUp = new ToolTip();
-                popUp.SetToolTip(box, "Click to view details");
-                box.Click += (s, e) => { ShowProductDetailsPanel(GetProductDetailsPanel(p)); };
             }
 
             panel.Controls.Add(ProductBoxLable(p.Name, ContentAlignment.TopLeft));
