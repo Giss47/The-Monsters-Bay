@@ -10,34 +10,45 @@ namespace Butik
 {
     class Cart : TableLayoutPanel
     {
+        private Data data;
+        private DataGridView cartGrid;
+        private TableLayoutPanel checkOutCalculationsCorner;
         private TextBox discountTextBox;
         private Label priceLabel;
         private Label discountLabel;
-        private DataGridView productGrid;
-        private Data data;
 
         private double totalCost;
         private double totalDiscount;
 
-        public Cart(Data d)
-        {
-            data = d;
-
-            data.cart.ForEach(p => totalCost += p.Cost);
-
+        public Cart(Data data)
+        {          
             Dock = DockStyle.Fill;
             ColumnCount = 3;
             RowCount = 2;
-
             ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
             ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
             ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333F));
             RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             RowStyles.Add(new RowStyle(SizeType.Absolute, 140));
 
-            productGrid = new DataGridView()
+            this.data = data;
+
+            data.cart.ForEach(p => totalCost += p.Cost);
+
+            cartGrid = CreatCartGrid();
+            SetColumnSpan(cartGrid, 3);
+            Controls.Add(cartGrid);
+
+            checkOutCalculationsCorner = CreateCheckouCalculationsCorner();
+            SetColumnSpan(checkOutCalculationsCorner, 3);
+            Controls.Add(checkOutCalculationsCorner);
+        }
+
+        private DataGridView CreatCartGrid()
+        {
+            var cartGrid = new DataGridView()
             {
-                Dock = DockStyle.Fill,               
+                Dock = DockStyle.Fill,
                 RowHeadersVisible = false,
                 CellBorderStyle = DataGridViewCellBorderStyle.None,
                 AllowUserToResizeColumns = false,
@@ -48,18 +59,14 @@ namespace Butik
 
             if (!(data.cart.Count == 0))
             {
-                productGrid.DataSource = data.cart;
+                cartGrid.DataSource = data.cart;
             }
-            SetColumnSpan(productGrid, 3);
-            Controls.Add(productGrid);
-
-            TableLayoutPanel checkoutBox = CreateCheckoutBox();
-            Controls.Add(checkoutBox);
-            SetColumnSpan(checkoutBox, 3);
+            return cartGrid;
         }
 
-        // Control methods.
-        private TableLayoutPanel CreateCheckoutBox()
+        // -------- Cart Side Components ------- //
+
+        private TableLayoutPanel CreateCheckouCalculationsCorner()
         {
             var panel = new TableLayoutPanel()
             {
@@ -98,23 +105,23 @@ namespace Butik
                 Text = "Enter discount code here...",
                 Dock = DockStyle.Fill
             };
-            discountTextBox.Click += DiscountTextBoxClick;
             panel.SetColumnSpan(discountTextBox, 2);
             panel.Controls.Add(discountTextBox);
+            discountTextBox.Click += DiscountTextBoxClick;
 
             Button discountButton = CreateButton("Submit");
-            discountButton.Click += SubmitDiscountButtonClick;
             panel.Controls.Add(discountButton);
+            discountButton.Click += SubmitDiscountButtonClick;
 
             Button clearCartButton = CreateButton("Clear cart");
-            clearCartButton.Click += ClearCart;
             panel.Controls.Add(clearCartButton);
+            clearCartButton.Click += ClearCart;
 
             Button placeOrderButton = CreateButton("Place order");
-            placeOrderButton.Click += PlaceOrderButtonClick;
-            placeOrderButton.Click += ClearCart;
             panel.SetColumnSpan(placeOrderButton, 2);
             panel.Controls.Add(placeOrderButton);
+            placeOrderButton.Click += PlaceOrderButtonClick;
+            placeOrderButton.Click += ClearCart;
 
             return panel;
         }
@@ -141,11 +148,12 @@ namespace Butik
             };
         }
 
-        // Operation methods.
+        // --------CheckOut Operatoins ------- //
+
         public void AddProduct(Product product)
         {
             bool productExists = false;
-            
+
             foreach (var c in data.cart)
             {
                 if (product.Name == c.Name)
@@ -165,12 +173,6 @@ namespace Butik
             RefreshDataGrid();
         }
         
-        private void RefreshDataGrid()
-        {
-            productGrid.DataSource = null;
-            productGrid.DataSource = data.cart;
-        }
-
         private void RecalculateTotalCost()
         {
             totalCost = 0;
@@ -181,17 +183,24 @@ namespace Butik
             priceLabel.Text = "$" + totalCost;
         }
 
-        // Eventlisteners.
+        private void RefreshDataGrid()
+        {
+            cartGrid.DataSource = null;
+            cartGrid.DataSource = data.cart;
+        }
+
+                // ---------- Operations Buttons Event Handlers --------- // 
+
         private void RemoveButtonClick(object sender, EventArgs e)
         {
-            if(!(data.cart.Count == 0))
+            if (!(data.cart.Count == 0))
             {
-                int i = productGrid.CurrentCell.RowIndex;
+                int i = cartGrid.CurrentCell.RowIndex;
                 data.cart.Remove(data.cart[i]);
                 RefreshDataGrid();
                 data.SaveToFile();
                 RecalculateTotalCost();
-            } 
+            }
         }
 
         private void DiscountTextBoxClick(object sender, EventArgs e)
@@ -202,12 +211,12 @@ namespace Butik
 
         private void SubmitDiscountButtonClick(object sender, EventArgs e)
         {
-            var submit = sender as Button; 
-            string keyCeck = "";
+            var submit = sender as Button;
+            var  keyCeck = "";
             double valueCheck = 0;
 
             string message = "Make sure you finished buying before using your discount code!" +
-                             "\n Would you like to proceed?"; 
+                             "\n Would you like to proceed?";
             string caption = "";
             DialogResult result = MessageBox.Show(message, caption,
                                          MessageBoxButtons.YesNo,
@@ -216,7 +225,6 @@ namespace Butik
             {
                 return;
             }
-
 
             foreach (KeyValuePair<string, double> pair in data.discountCodes)
             {
@@ -242,7 +250,7 @@ namespace Butik
                 string[] temp = File.ReadLines("DiscountList.csv").Where(d => d != $"{keyCeck},{valueCheck}").ToArray();
                 File.WriteAllLines("DiscountList.csv", temp);
                 data.discountCodes.Remove(keyCeck);
-                submit.Enabled = false; 
+                submit.Enabled = false;
 
                 RefreshDataGrid();
             }
@@ -254,7 +262,7 @@ namespace Butik
             data.cart.Clear();
             totalDiscount = 0;
             discountLabel.Text = "$" + totalDiscount;
-            
+
             if (File.Exists(data.CartFile))
             {
                 File.Delete(data.CartFile);
@@ -268,7 +276,7 @@ namespace Butik
         {
             if (data.cart.Count != 0)
             {
-                string receipt = "Your order has been placed.\r\n" +
+                var receipt = "Your order has been placed.\r\n" +
                     "\r\n\r\n" +
                     "Qty:\tProduct\t\tUnit price:\tCost:\r\n";
 
@@ -291,8 +299,8 @@ namespace Butik
 
                 if (result == DialogResult.Yes)
                 {
-                    PrintDocument p = new PrintDocument() { DocumentName = "Receipt from the Monster Bay" };
-                    PrintDialog printDialog = new PrintDialog() { Document = p };
+                    var p = new PrintDocument() { DocumentName = "Receipt from the Monster Bay" };
+                    var printDialog = new PrintDialog() { Document = p };
                     p.PrintPage += delegate (object sender2, PrintPageEventArgs e2)
                     {
                         e2.Graphics.DrawString(receipt, new Font("Arial", 12), new SolidBrush(Color.Black),

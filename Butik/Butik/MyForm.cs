@@ -9,55 +9,35 @@ namespace Butik
 {
     class MyForm : Form
     {
-        private static TableLayoutPanel mainPanel;
-        private static FlowLayoutPanel bayPanel;
-        private static FlowLayoutPanel productPanel;
-        private static Button musicONOFF;
-        private static SoundPlayer WannaRock = new SoundPlayer { SoundLocation = @"resources\WR.wav" };
-        private static Data data;
-        private static Cart cart;
+        private TableLayoutPanel mainPanel;
+        private FlowLayoutPanel availableProductsPanel;
+        private FlowLayoutPanel productDetailsPanel;
+        private Button musicONOFF;
+        private SoundPlayer WannaRock;
+        private Data data;
+        private Cart cart;
 
-        private static bool MusicON = true;
+        private bool musicON = true;
 
         public MyForm()
         {
-            data = new Data();
-            cart = new Cart(data);
-
-            WannaRock.PlayLooping();
             MinimumSize = new Size(585, 310);
-            Width = 1240;
+            Width = 1300;
             Height = 700;
             Text = "The Monsters Bay";
             Icon = new Icon("resources/icon.ico");
             StartPosition = FormStartPosition.CenterScreen;
             Padding = new Padding(5);
 
-            mainPanel = new TableLayoutPanel()
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 2,
-                RowCount = 3
-            };
-            mainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            mainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
-            mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
-            mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
-            mainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            data = new Data();
+            cart = new Cart(data);
+            WannaRock = new SoundPlayer { SoundLocation = @"resources\WR.wav" };
+            WannaRock.PlayLooping();
+
+            mainPanel = GetMainpanel();
             Controls.Add(mainPanel);
 
-            ComboBox sort = new ComboBox()
-            {
-                Anchor = AnchorStyles.Right,
-                DropDownStyle = ComboBoxStyle.DropDownList
-            };
-            sort.Items.Add("Sort by:");
-            sort.Items.Add("Price - ascending");
-            sort.Items.Add("Price - descending");
-            sort.Items.Add("Name - ascending");
-            sort.Items.Add("Name - descending");
-            sort.SelectedIndex = 0;
-            sort.SelectedIndexChanged += SortProducts;
+            ComboBox sort = GetSortBox();
             mainPanel.Controls.Add(sort);
 
             musicONOFF = new Button { Text = "Music OFF", Anchor = AnchorStyles.Right };
@@ -70,28 +50,16 @@ namespace Butik
             Label cartLabel = CreateLabel("Shopping cart", 14, ContentAlignment.MiddleCenter);
             mainPanel.Controls.Add(cartLabel, 1, 1);
 
-            bayPanel = new FlowLayoutPanel()
-            {
-                Dock = DockStyle.Fill,
-                BorderStyle = BorderStyle.FixedSingle,
-                AutoScroll = true,
-                AutoSize = true,
-                BackgroundImage = Image.FromFile(@"resources\backgrounds\2001.png"),
-                BackgroundImageLayout = ImageLayout.Stretch
-            };
-            mainPanel.Controls.Add(bayPanel, 0, 2);
-            foreach (var p in data.Products)
-            {
-                bayPanel.Controls.Add(GetProductPanel(p));
-            }
+            availableProductsPanel = GetAvailableProductsPanel();
+            mainPanel.Controls.Add(availableProductsPanel, 0, 2);
 
-            // Creating cart using Cart Class.
-            Cart cartPanel = new Cart(data);
-            mainPanel.Controls.Add(cartPanel, 1, 2);
+            cart = new Cart(data);
+            mainPanel.Controls.Add(cart, 1, 2);
 
             FormClosing += MyFormClosing;
         }
 
+        
         private Label CreateLabel(string text, int size, ContentAlignment align)
         {
             return new Label()
@@ -103,19 +71,40 @@ namespace Butik
             };
         }
 
-        // Applied in Product Class EventHandler.
-        public static void InsertProductInfoPanel(FlowLayoutPanel panel)
+        private TableLayoutPanel GetMainpanel()
         {
-            productPanel = panel;
-            bayPanel.Hide();
-            mainPanel.Controls.Add(productPanel, 0, 2);
+            var mainPanel = new TableLayoutPanel()
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 2,
+                RowCount = 3
+            };
+            mainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            mainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
+            mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+            mainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+
+            return mainPanel;
         }
-        // Applied in Product Class EventHandler. 
-        public static void InsertBayPanel()
+
+        // -------- MainPanel Components ---------//
+
+        private ComboBox GetSortBox()
         {
-            mainPanel.Controls.Add(bayPanel);
-            productPanel.Hide();
-            bayPanel.Show();
+            var sort = new ComboBox()
+            {
+                Anchor = AnchorStyles.Right,
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+            sort.Items.Add("Sort Products by:");
+            sort.Items.Add("Price - ascending");
+            sort.Items.Add("Price - descending");
+            sort.Items.Add("Name A - Z");
+            sort.Items.Add("Name Z - A");
+            sort.SelectedIndex = 0;
+            sort.SelectedIndexChanged += SortProducts;
+            return sort;
         }
 
         private void SortProducts(object sender, EventArgs e)
@@ -141,45 +130,52 @@ namespace Butik
                 sortedArray = data.Products.OrderByDescending(p => p.Name).ToArray();
             }
 
-            bayPanel.Controls.Clear();
+            availableProductsPanel.Controls.Clear();
             foreach (var p in sortedArray)
             {
-                bayPanel.Controls.Add(GetProductPanel(p));
+                availableProductsPanel.Controls.Add(ProductBox(p));
             }
         }
 
         private void MusicONOFFClick(object sender, EventArgs e)
         {
             var b = sender as Button;
-            if (MusicON)
+            if (musicON)
             {
                 WannaRock.Stop();
-                MusicON = false;
+                musicON = false;
                 b.Text = "Music ON";
             }
             else
             {
                 WannaRock.PlayLooping();
-                MusicON = true;
+                musicON = true;
                 b.Text = "Music OFF";
             }
         }
 
-        private void MyFormClosing(object sender, FormClosingEventArgs e)
+                    // ------ AvailableProducts components ------- //
+
+        private FlowLayoutPanel GetAvailableProductsPanel()
         {
-            var message = "Are you sure  you would like to exit The Monsters Bay?";
-            var caption = "Exit";
-            DialogResult result = MessageBox.Show(message, caption,
-                                         MessageBoxButtons.YesNo,
-                                         MessageBoxIcon.Question);
-            if (result == DialogResult.No)
+             var availableProductsPanel = new FlowLayoutPanel()
             {
-                e.Cancel = true;
+                Dock = DockStyle.Fill,
+                BorderStyle = BorderStyle.FixedSingle,
+                AutoScroll = true,
+                AutoSize = true,
+                BackgroundImage = Image.FromFile(@"resources\backgrounds\2001.png"),
+                BackgroundImageLayout = ImageLayout.Stretch
+            };
+            foreach (var p in data.Products)
+            {
+                availableProductsPanel.Controls.Add(ProductBox(p));
             }
+
+            return availableProductsPanel;
         }
 
-
-        public TableLayoutPanel GetProductPanel(Product p)
+        private TableLayoutPanel ProductBox(Product p)
         {
             var panel = new TableLayoutPanel()
             {
@@ -209,7 +205,8 @@ namespace Butik
                 panel.Controls.Add(box);
                 ToolTip popUp = new ToolTip();
                 popUp.SetToolTip(box, "Click to view details");
-                box.Click += (s, e) => { InsertProductInfoPanel(GetInfoPanel(p)); };
+
+                box.Click += (s, e) => { ShowProductDetailsPanel(GetProductDetailsPanel(p)); };
                 box.MouseHover += (s, e) => { box.BackColor = Color.Red; };
                 box.MouseLeave += (s, e) => { box.BackColor = Color.LightGray; };
             }
@@ -228,19 +225,17 @@ namespace Butik
                 panel.Controls.Add(box);
                 ToolTip popUp = new ToolTip();
                 popUp.SetToolTip(box, "Click to view details");
-                box.Click += (s, e) => { InsertProductInfoPanel(GetInfoPanel(p)); };
+                box.Click += (s, e) => { ShowProductDetailsPanel(GetProductDetailsPanel(p)); };
             }
 
+            panel.Controls.Add(ProductBoxLable(p.Name, ContentAlignment.TopLeft));
 
-
-            panel.Controls.Add(CreateProductPanelLabel(p.Name, ContentAlignment.TopLeft));
-
-            panel.Controls.Add(CreateProductPanelLabel("$" + p.Price, ContentAlignment.TopRight));
+            panel.Controls.Add(ProductBoxLable("$" + p.Price, ContentAlignment.TopRight));
 
             return panel;
         }
 
-        private Label CreateProductPanelLabel(string text, ContentAlignment align)
+        private Label ProductBoxLable(string text, ContentAlignment align)
         {
             return new Label()
             {
@@ -252,7 +247,16 @@ namespace Butik
             };
         }
 
-        public FlowLayoutPanel GetInfoPanel(Product p)
+        private void ShowProductDetailsPanel(FlowLayoutPanel panel)
+        {
+            productDetailsPanel = panel;
+            availableProductsPanel.Hide();
+            mainPanel.Controls.Add(productDetailsPanel, 0, 2);
+        }
+
+                    // ------ ProductDetails components ------- //
+
+        private FlowLayoutPanel GetProductDetailsPanel(Product p)
         {
             var panel = new FlowLayoutPanel
             {
@@ -262,7 +266,7 @@ namespace Butik
                 BackgroundImage = Image.FromFile(@"resources\backgrounds\secondWindow.jpg"),
                 BackgroundImageLayout = ImageLayout.Stretch
             };
-            
+
             // In case image is missing or direcory is writen wrong.
             try
             {
@@ -303,26 +307,26 @@ namespace Butik
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 15));
             panel.Controls.Add(table);
 
-            Label title = CreateInfoPanelLabel(p.Name, 20, ContentAlignment.MiddleLeft);
+            Label title = ProductDetialsPanelLabel(p.Name, 20, ContentAlignment.MiddleLeft);
             table.Controls.Add(title);
             table.SetColumnSpan(title, 2);
 
-            Label description = CreateInfoPanelLabel(p.Description, 17, ContentAlignment.TopLeft);
+            Label description = ProductDetialsPanelLabel(p.Description, 17, ContentAlignment.TopLeft);
             table.Controls.Add(description);
             table.SetColumnSpan(description, 2);
 
-            Label price = CreateInfoPanelLabel("Price: $" + p.Price, 17, ContentAlignment.MiddleRight);
+            Label price = ProductDetialsPanelLabel("Price: $" + p.Price, 17, ContentAlignment.MiddleRight);
             table.Controls.Add(price);
             table.SetColumnSpan(price, 2);
 
-            Button back = CreateInfoPanelButton("Back");
-            back.Click += (s, e) => 
+            Button back = ProductDetialsPanelButton("Back");
+            back.Click += (s, e) =>
             {
-                InsertBayPanel();
+                ShowAvailableProductsPanel();
             };
             table.Controls.Add(back);
 
-            Button addToCart = CreateInfoPanelButton("Add to cart");
+            Button addToCart = ProductDetialsPanelButton("Add to cart");
             addToCart.Click += (s, e) =>
             {
                 cart.AddProduct(p);
@@ -332,7 +336,7 @@ namespace Butik
             return panel;
         }
 
-        private Label CreateInfoPanelLabel(string text, int size, ContentAlignment align)
+        private Label ProductDetialsPanelLabel(string text, int size, ContentAlignment align)
         {
             return new Label()
             {
@@ -345,7 +349,7 @@ namespace Butik
             };
         }
 
-        private Button CreateInfoPanelButton(string text)
+        private Button ProductDetialsPanelButton(string text)
         {
             return new Button()
             {
@@ -353,5 +357,27 @@ namespace Butik
                 Size = new Size(200, 50)
             };
         }
+
+        private void ShowAvailableProductsPanel()
+        {
+            mainPanel.Controls.Add(availableProductsPanel);
+            productDetailsPanel.Hide();
+            availableProductsPanel.Show();
+        }
+
+        //-------//
+
+        private void MyFormClosing(object sender, FormClosingEventArgs e)
+        {
+            var message = "Are you sure  you would like to exit The Monsters Bay?";
+            var caption = "Exit";
+            DialogResult result = MessageBox.Show(message, caption,
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question);
+            if (result == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+        }    
     }
 }
