@@ -27,15 +27,30 @@ namespace Butik
             Text = "The Monsters Bay";
             Icon = new Icon("resources/icon.ico");
             StartPosition = FormStartPosition.CenterScreen;
-            Padding = new Padding(5);
-
-            data = new Data();
-            cart = new Cart(data);
+            Padding = new Padding(5);            
+            
             WannaRock = new SoundPlayer { SoundLocation = @"resources\WR.wav" };
-            WannaRock.PlayLooping();
+            WannaRock.PlayLooping();            
 
             mainPanel = GetMainpanel();
             Controls.Add(mainPanel);
+
+            FormClosing += MyFormClosing;
+        }        
+
+        private TableLayoutPanel GetMainpanel()
+        {
+            var mainPanel = new TableLayoutPanel()
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 2,
+                RowCount = 3
+            };
+            mainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            mainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
+            mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
+            mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+            mainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));            
 
             ComboBox sort = GetSortBox();
             mainPanel.Controls.Add(sort);
@@ -50,16 +65,17 @@ namespace Butik
             Label cartLabel = CreateLabel("Shopping cart", 14, ContentAlignment.MiddleCenter);
             mainPanel.Controls.Add(cartLabel, 1, 1);
 
+            data = new Data();
+
             availableProductsPanel = GetAvailableProductsPanel();
             mainPanel.Controls.Add(availableProductsPanel, 0, 2);
-
+            
             cart = new Cart(data);
             mainPanel.Controls.Add(cart, 1, 2);
 
-            FormClosing += MyFormClosing;
+            return mainPanel;
         }
 
-        
         private Label CreateLabel(string text, int size, ContentAlignment align)
         {
             return new Label()
@@ -69,23 +85,6 @@ namespace Butik
                 TextAlign = align,
                 Dock = DockStyle.Fill
             };
-        }
-
-        private TableLayoutPanel GetMainpanel()
-        {
-            var mainPanel = new TableLayoutPanel()
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 2,
-                RowCount = 3
-            };
-            mainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            mainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300));
-            mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
-            mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
-            mainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-
-            return mainPanel;
         }
 
         // -------- MainPanel Components ---------//
@@ -212,7 +211,7 @@ namespace Butik
             }
             catch (System.IO.FileNotFoundException)
             {
-                MessageBox.Show("Image not found \nCheck products file or image directory");
+                MessageBox.Show($"Image not found for {p.Name} \nCheck products file or image directory");
             }
 
             panel.Controls.Add(ProductBoxLable(p.Name, ContentAlignment.TopLeft));
@@ -346,8 +345,7 @@ namespace Butik
         }
 
         private void ShowAvailableProductsPanel()
-        {
-            mainPanel.Controls.Add(availableProductsPanel);
+        {            
             productDetailsPanel.Hide();
             availableProductsPanel.Show();
         }

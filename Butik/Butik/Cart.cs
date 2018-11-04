@@ -170,25 +170,9 @@ namespace Butik
 
             data.SaveToFile();
             RecalculateTotalCost();
-            RefreshDataGrid();
-        }
-        
-        private void RecalculateTotalCost()
-        {
-            totalCost = 0;
-            foreach (var p in data.cart)
-            {
-                totalCost += p.Cost;
-            }
-            priceLabel.Text = "$" + totalCost;
-        }
-
-        private void RefreshDataGrid()
-        {
-            cartGrid.DataSource = null;
-            cartGrid.DataSource = data.cart;
-        }
-
+            RefreshCartGrid();
+        }       
+      
                 // ---------- Operations Buttons Event Handlers --------- // 
 
         private void RemoveButtonClick(object sender, EventArgs e)
@@ -197,7 +181,7 @@ namespace Butik
             {
                 int i = cartGrid.CurrentCell.RowIndex;
                 data.cart.Remove(data.cart[i]);
-                RefreshDataGrid();
+                RefreshCartGrid();
                 data.SaveToFile();
                 RecalculateTotalCost();
             }
@@ -252,7 +236,7 @@ namespace Butik
                 data.discountCodes.Remove(keyCeck);
                 submit.Enabled = false;
 
-                RefreshDataGrid();
+                RefreshCartGrid();
             }
 
         }
@@ -269,7 +253,7 @@ namespace Butik
             }
 
             RecalculateTotalCost();
-            RefreshDataGrid();
+            RefreshCartGrid();
         }
 
         private void PlaceOrderButtonClick(object sender, EventArgs e1)
@@ -313,7 +297,7 @@ namespace Butik
                         p.Print();
                     }
                 }
-                RefreshDataGrid();
+                RefreshCartGrid();
             }
             else
             {
@@ -322,6 +306,22 @@ namespace Butik
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+        }
+
+        private void RecalculateTotalCost()
+        {
+            totalCost = 0;
+            foreach (var p in data.cart)
+            {
+                totalCost += p.Cost;
+            }
+            priceLabel.Text = "$" + totalCost;
+        }
+
+        private void RefreshCartGrid()
+        {
+            cartGrid.DataSource = null;
+            cartGrid.DataSource = data.cart;
         }
     }
 }
