@@ -232,11 +232,10 @@ namespace Butik
             };
         }
 
-        private void ShowProductDetailsPanel(FlowLayoutPanel panel)
-        {
-            productDetailsPanel = panel;
-            availableProductsPanel.Hide();
-            mainPanel.Controls.Add(productDetailsPanel, 0, 2);
+        private void ShowAvailableProductsPanel()
+        {            
+            productDetailsPanel.Hide();
+            availableProductsPanel.Show();
         }
 
                     // ------ ProductDetails components ------- //
@@ -337,10 +336,11 @@ namespace Butik
             };
         }
 
-        private void ShowAvailableProductsPanel()
-        {            
-            productDetailsPanel.Hide();
-            availableProductsPanel.Show();
+        private void ShowProductDetailsPanel(FlowLayoutPanel panel)
+        {
+            productDetailsPanel = panel;
+            availableProductsPanel.Hide();
+            mainPanel.Controls.Add(productDetailsPanel, 0, 2);
         }
 
         //-------//

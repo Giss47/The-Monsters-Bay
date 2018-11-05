@@ -2,10 +2,10 @@
 {
     class Product
     {
-        public string Name { get; private set; }
-        public double Price { get; private set; }
-        public string Description { get; private set; }
-        public string ImageLocation { get; private set; }
+        public string Name { get; }
+        public double Price { get; }
+        public string Description { get; }
+        public string ImageLocation { get; }
 
         public Product(string name, double price, string description, string image)
         {
