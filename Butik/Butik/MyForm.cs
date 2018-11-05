@@ -13,7 +13,7 @@ namespace Butik
         private FlowLayoutPanel availableProductsPanel;
         private FlowLayoutPanel productDetailsPanel;
         private Button musicONOFF;
-        private SoundPlayer WannaRock;
+        private SoundPlayer iWannaRock;
         private Data data;
         private Cart cart;
 
@@ -29,16 +29,16 @@ namespace Butik
             StartPosition = FormStartPosition.CenterScreen;
             Padding = new Padding(5);            
             
-            WannaRock = new SoundPlayer { SoundLocation = @"resources\WR.wav" };
-            WannaRock.PlayLooping();            
+            iWannaRock = new SoundPlayer { SoundLocation = @"resources\WR.wav" };
+            iWannaRock.PlayLooping();            
 
-            mainPanel = GetMainpanel();
+            mainPanel = GetMainPanel();
             Controls.Add(mainPanel);
 
             FormClosing += MyFormClosing;
         }        
 
-        private TableLayoutPanel GetMainpanel()
+        private TableLayoutPanel GetMainPanel()
         {
             var mainPanel = new TableLayoutPanel()
             {
@@ -75,7 +75,8 @@ namespace Butik
 
             return mainPanel;
         }
-
+        
+        // -------- MainPanel Components ---------//
         private Label CreateLabel(string text, int size, ContentAlignment align)
         {
             return new Label()
@@ -86,8 +87,6 @@ namespace Butik
                 Dock = DockStyle.Fill
             };
         }
-
-        // -------- MainPanel Components ---------//
 
         private ComboBox GetSortBox()
         {
@@ -141,13 +140,13 @@ namespace Butik
             var b = sender as Button;
             if (musicON)
             {
-                WannaRock.Stop();
+                iWannaRock.Stop();
                 musicON = false;
                 b.Text = "Music ON";
             }
             else
             {
-                WannaRock.PlayLooping();
+                iWannaRock.PlayLooping();
                 musicON = true;
                 b.Text = "Music OFF";
             }
@@ -214,14 +213,14 @@ namespace Butik
                 MessageBox.Show($"Image not found for {p.Name} \nCheck products file or image directory");
             }
 
-            panel.Controls.Add(ProductBoxLable(p.Name, ContentAlignment.TopLeft));
+            panel.Controls.Add(ProductBoxLabel(p.Name, ContentAlignment.TopLeft));
 
-            panel.Controls.Add(ProductBoxLable("$" + p.Price, ContentAlignment.TopRight));
+            panel.Controls.Add(ProductBoxLabel("$" + p.Price, ContentAlignment.TopRight));
 
             return panel;
         }
 
-        private Label ProductBoxLable(string text, ContentAlignment align)
+        private Label ProductBoxLabel(string text, ContentAlignment align)
         {
             return new Label()
             {
@@ -253,29 +252,23 @@ namespace Butik
                 BackgroundImageLayout = ImageLayout.Stretch
             };
 
+            var picBox = new PictureBox()
+            {
+                SizeMode = PictureBoxSizeMode.Zoom,
+                BackColor = Color.Transparent,
+                Width = 400,
+                Height = 300
+            };
+            panel.Controls.Add(picBox);
+
             // In case image is missing or direcory is writen wrong.
             try
             {
-                var picBox = new PictureBox()
-                {
-                    Image = Image.FromFile(p.ImageLocation),
-                    SizeMode = PictureBoxSizeMode.Zoom,
-                    BackColor = Color.Transparent,
-                    Width = 400,
-                    Height = 300
-                };
-                panel.Controls.Add(picBox);
+                picBox.Image = Image.FromFile(p.ImageLocation);
             }
             catch
             {
-                var picBox = new PictureBox()
-                {
-                    SizeMode = PictureBoxSizeMode.Zoom,
-                    BackColor = Color.Transparent,
-                    Width = 400,
-                    Height = 300
-                };
-                panel.Controls.Add(picBox);
+                picBox.BackColor = Color.LightGray;
             }
 
             var table = new TableLayoutPanel()
@@ -293,26 +286,26 @@ namespace Butik
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 15));
             panel.Controls.Add(table);
 
-            Label title = ProductDetialsPanelLabel(p.Name, 20, ContentAlignment.MiddleLeft);
+            Label title = ProductDetailsPanelLabel(p.Name, 20, ContentAlignment.MiddleLeft);
             table.Controls.Add(title);
             table.SetColumnSpan(title, 2);
 
-            Label description = ProductDetialsPanelLabel(p.Description, 17, ContentAlignment.TopLeft);
+            Label description = ProductDetailsPanelLabel(p.Description, 17, ContentAlignment.TopLeft);
             table.Controls.Add(description);
             table.SetColumnSpan(description, 2);
 
-            Label price = ProductDetialsPanelLabel("Price: $" + p.Price, 17, ContentAlignment.MiddleRight);
+            Label price = ProductDetailsPanelLabel("Price: $" + p.Price, 17, ContentAlignment.MiddleRight);
             table.Controls.Add(price);
             table.SetColumnSpan(price, 2);
 
-            Button back = ProductDetialsPanelButton("Back");
+            Button back = ProductDetailsPanelButton("Back");
             back.Click += (s, e) =>
             {
                 ShowAvailableProductsPanel();
             };
             table.Controls.Add(back);
 
-            Button addToCart = ProductDetialsPanelButton("Add to cart");
+            Button addToCart = ProductDetailsPanelButton("Add to cart");
             addToCart.Click += (s, e) =>
             {
                 cart.AddProduct(p);
@@ -322,7 +315,7 @@ namespace Butik
             return panel;
         }
 
-        private Label ProductDetialsPanelLabel(string text, int size, ContentAlignment align)
+        private Label ProductDetailsPanelLabel(string text, int size, ContentAlignment align)
         {
             return new Label()
             {
@@ -335,7 +328,7 @@ namespace Butik
             };
         }
 
-        private Button ProductDetialsPanelButton(string text)
+        private Button ProductDetailsPanelButton(string text)
         {
             return new Button()
             {

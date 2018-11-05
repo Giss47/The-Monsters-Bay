@@ -33,7 +33,7 @@ namespace Butik
 
             this.data = data;
 
-            data.cart.ForEach(p => totalCost += p.Cost);
+            this.data.cart.ForEach(p => totalCost += p.Cost);
 
             cartGrid = CreateCartGrid();
             SetColumnSpan(cartGrid, 3);
