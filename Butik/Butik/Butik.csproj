@@ -70,6 +70,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Design.txt" />
+    <Content Include="Overview.txt" />
     <Content Include="resources\backgrounds\2001.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
