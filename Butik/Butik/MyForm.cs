@@ -24,7 +24,7 @@ namespace Butik
             MinimumSize = new Size(585, 310);
             Width = 1300;
             Height = 700;
-            Text = "The Monsters Bay";
+            Text = "The Monsters Bay\u2122 - by Ghassan & Jocke Ltd.";
             Icon = new Icon("resources/icon.ico");
             StartPosition = FormStartPosition.CenterScreen;
             Padding = new Padding(5);            
