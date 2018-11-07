@@ -5,29 +5,32 @@ into several classes to abstract the code and make it easier to find
 certain parts in the code. Another reason is to have the ability to create 
 objects of a certain class which is the way we went. All of our classes is 
 instantiated throughout runtime and this gives us high security in the 
-programs structure. Maybe we should have let the Cart class be a static 
+programs structure. We could have let the Cart class be a static 
 one since it’s a static part of the program, but we decided to go with a 
-non-static one to achieve encapsulation and a high protection level on 
+non-static one to achieve encapsulation and a high protection level for
 data. 
 
-In the start of writing our code we saved a Static list of products 
+At the start of writing our code, we saved a Static list of products 
 directly in MyForm class. This practice was easier to work with, but 
-in the other hand we encountered many problems, as the data could be 
-easily accessed from any part of code in our project. Another downside 
-was that we used the same list to directly work with the data within by 
-other classes, like the Cart class. Which lead us to strange behavior 
-and a frustrating bug. Our Cart operations were changing the data within 
-the main objects and it was hard to detect the bug. By abstracting both, 
-product object in Class Product and cart object in Class CartProduct, 
-along with creating Class data, we could come over this problem and 
-create a solid and easily maintained code. 
+on the other hand we encountered many problems, as the data could be 
+easily accessed from any part of the code in our project. Another 
+downside was that we used the same list to directly work with the data 
+within by other classes, like the Cart class. Which lead us to unexpected
+behavior and a frustrating bug. Our Cart operations were changing the 
+data within the main objects and it was hard to detect the bug. 
+By abstracting both,product object in Class Product and cart object in 
+Class CartProduct, along with creating Class data, we could over come
+this problem and create a solid and easily mintainable code. 
  
-We have heavily used encapsulation through our code by using methods 
-where ever we could. In MyForm class we have created many methods that 
+We have relied upon encapsulation through our code by using methods 
+where ever we could. In MyForm class, we have created many methods that 
 mostly depend on each other. This nestling of methods serves very well 
-as an object oriented pattern and gives the program a solid build up. 
+as an object oriented pattern, and gives the program a solid build up. 
 But on the other hand, it made the source code in some areas a little 
-bit hard to follow and understand from the first look at it. Gaining 
-reusability and security was a good choice over readability for us in 
-this project and has influenced many of our structure and design 
+bit hard to follow and understand from the first outlook, and in 
+some angles, we have wrote more lines of code. As the program is not 
+very big, no significant performance issues can be raised by using more
+instructions. Gaining reusability and security was, for us, a good choice 
+over readability and my minor performance issues in
+this project, and has influenced many of our structure and design related 
 decisions. 

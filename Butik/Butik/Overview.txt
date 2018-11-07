@@ -4,43 +4,47 @@ For this purpose, we have chosen to create a .csv file to save information about
 Including name, price, description and photo name. In the same manner we have also created another .csv file for discount codes. 
 Both files are saved in the program’s solution folder “Butik”. 
 
-Classes:
+Classes and Methods: 
 Note that classes are created separately each in its own .cs file to support the readability of the source code and moving 
 between the classes to follow their implementations and interactions. 
 
 -	Class Data:
-We have decided that the program is divided into two main grounds, First Data and second Graphics. That is why we decided to a
-bstract our code to fulfill this understanding. Class Data was created to merely take hand of the input data, where the Trucks 
-information and discount codes are imported from the .csv files and saved in variables to be further used by the program. 
+We have decided that the program is divided into two main grounds, primary is Data and secondary is Graphics. That's why we decided 
+to abstract our code in order fullfill this understanding. Class Data was created to merely work with the input data, where the Trucks 
+information and discount codes are imported from the .csv files and saved in variables, to be further used by the program. 
 In addition to this, the class holds a variable and a method to deal with processed data under the run time, more specifically, 
 saving and retrieving data processed in the cart by the user. For this purpose, a .mbc file is created under run time with name 
 Cart and located at c:\Windows\Temp Folder. 
 
 -	Class Products and Class CartProducts 
 Both classes are created for instantiating a convenient object to store connected data in a simple, organized and safe manner.
- while Product class holds solely variables that save a truck data, CartProducts class is created to instantiating objects that 
+ while Product class holds solely variables that save a truck data, CartProducts class is created to instantiate objects that 
 store information about the product being chosen by the user to buy, along with methods that can work on this data. 
+
+CarProducts.IncreaseQuantity(): increases products quantity by 1.
+CarProducts.RecalculateCost(): calculates the cost of the current the product.
 
 -	Class Cart:
 Now that we have written classes to merely deal with input/output data, we have decided that the code can be broken down into
  more pieces. We have two main parts in the program when it comes to the graphical aspect of it. The part showing the data, 
-and the part that dealing with it (the Cart). Cart is a class that inherits directly from the TableLayoutPanel class, and mostly 
+and the part that is dealing with it (the Cart). Cart is a class that inherits directly from the TableLayoutPanel class, and most
 significantly holds a constructor that has an object of Class Data as it’s parameter. This how classes Data and Cart interact.
-Where class Data provides the necessary data and class Cart works on this data, while providing the visualization of this 
+Where class Data provides the necessary data and class Cart works on this data, and providing the visualization of this 
 interaction in a shape of a TableLayoutPanel (includes a CartDataGrid to show products in the cart), this layout can be later 
 added to the main graphical panel of the program. Class cart has both methods and event handlers that assure those functionalities.
+
+void RefreshCartGrid(): As the source for the CartGrid is set to be a list of CartPoducts, 
+this list is constantly changing, and this method assures the refreshing of the data source.
+
+void AddProduct(Product product): is implemented in a method in Class MyForm, FlowLayoutPanel GetProductDetailsPanel(Product p). 
    
 -	Class MyForm: 
 This class inherits form Windows.Form class, and it holds mainly the graphical properties of the program. Both instantiations of 
-Class Data and Class Cart is taking place throw the MyForm Class constructor to make use of their variables, methods and event 
-handlers as intended. This Class is run by the application run code in the Program Class created for this purpose. 
+Class Data and Class Cart is taking place throw the MyForm Class constructor, to make use of their variables, methods and event 
+handlers as intended. This Class is run by the application run code in the Program Class created for this purpose.
 
-Methods:
-Cart . void RefreshCartGrid(): As the source for the CartGrid is set to be a list of CartPoduct’s, 
-this list is constantly changing, and this method assure the refreshing of the data source. 
-
- Cart. void AddProduct(Product product): is implemented in a method in Class MyForm, FlowLayoutPanel GetProductDetailsPanel(Product p).
-
-MyForm. void ShowProductDetailsPanel(FlowLayoutPanel panel),  and MyForm. void ShowAvailableProductsPanel()
+void ShowProductDetailsPanel(FlowLayoutPanel panel),  and void ShowAvailableProductsPanel()
 Both methods used to switch between the view of all available products and the view of a single product details, 
-as both panels are allocated at the same coordinates in the MainPanel. 
+as both panels are allocated at the same coordinates in the MainPanel.   
+
+
