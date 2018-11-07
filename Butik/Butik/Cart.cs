@@ -159,8 +159,7 @@ namespace Butik
                 if (product.Name == c.Name)
                 {
                     productExists = true;
-                    c.IncreaseQuantity();
-                    c.RecalculateCost();
+                    c.IncreaseQuantity();                    
                 }
             }
             if (!productExists)
@@ -180,7 +179,15 @@ namespace Butik
             if (!(data.cart.Count == 0))
             {
                 int i = cartGrid.CurrentCell.RowIndex;
-                data.cart.Remove(data.cart[i]);
+                if (data.cart[i].Quantity > 1)
+                {
+                  data.cart[i].DecreaseQuantity();
+                }                
+                else
+                {
+                  data.cart.Remove(data.cart[i]);
+                }        
+
                 RefreshCartGrid();
                 data.SaveToFile();
                 RecalculateTotalCost();
@@ -195,6 +202,16 @@ namespace Butik
 
         private void SubmitDiscountButtonClick(object sender, EventArgs e)
         {
+            if (data.cart.Count == 0)
+            {
+                string m = "Your shopping cart is empty!";
+                string c = "";
+                DialogResult r = MessageBox.Show(m, c,
+                                             MessageBoxButtons.OK,
+                                             MessageBoxIcon.Warning);
+                return;               
+            }
+
             var submit = sender as Button;
             var  keyCeck = "";
             double valueCheck = 0;

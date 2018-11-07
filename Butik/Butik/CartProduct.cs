@@ -3,7 +3,7 @@
     class CartProduct
     {
         public string Name { get; }
-        public int Quantity { get; private set; }
+        public int Quantity { get; set; }
         public double Cost { get; private set; }
 
         // Prevents the Price-variable to be shown in the cart DataGridView.
@@ -21,11 +21,13 @@
         public void IncreaseQuantity()
         {
             Quantity++;
+            Cost += Price;
         }
 
-        public void RecalculateCost()
-        {
-            Cost = Quantity * Price;
+        public void DecreaseQuantity()
+        {               
+            Quantity--;          
+            Cost -= Price;
         }
     }
 }

@@ -21,8 +21,8 @@ Both classes are created for instantiating a convenient object to store connecte
  while Product class holds solely variables that save a truck data, CartProducts class is created to instantiate objects that 
 store information about the product being chosen by the user to buy, along with methods that can work on this data. 
 
-CarProducts.IncreaseQuantity(): increases products quantity by 1.
-CarProducts.RecalculateCost(): calculates the cost of the current the product.
+CarProducts.IncreaseQuantity(): increases products quantity by 1 and calculates the cost of the current the product.
+CarProducts.DecreaseQuantity(): Just does the opposite.
 
 -	Class Cart:
 Now that we have written classes to merely deal with input/output data, we have decided that the code can be broken down into

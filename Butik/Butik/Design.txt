@@ -10,7 +10,7 @@ one since it’s a static part of the program, but we decided to go with a
 non-static one to achieve encapsulation and a high protection level for
 data. 
 
-At the start of writing our code, we saved a Static list of products 
+At the beginning of writing our code, we saved a Static list of products 
 directly in MyForm class. This practice was easier to work with, but 
 on the other hand we encountered many problems, as the data could be 
 easily accessed from any part of the code in our project. Another 
