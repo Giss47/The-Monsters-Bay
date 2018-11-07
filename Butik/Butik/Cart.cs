@@ -21,7 +21,7 @@ namespace Butik
         private double totalDiscount;
 
         public Cart(Data data)
-        {          
+        {
             Dock = DockStyle.Fill;
             ColumnCount = 3;
             RowCount = 2;
@@ -159,7 +159,7 @@ namespace Butik
                 if (product.Name == c.Name)
                 {
                     productExists = true;
-                    c.IncreaseQuantity();                    
+                    c.IncreaseQuantity();
                 }
             }
             if (!productExists)
@@ -170,9 +170,9 @@ namespace Butik
             data.SaveToFile();
             RecalculateTotalCost();
             RefreshCartGrid();
-        }       
-      
-                // ---------- Operations Buttons Event Handlers --------- // 
+        }
+
+        // ---------- Operations Buttons Event Handlers --------- // 
 
         private void RemoveButtonClick(object sender, EventArgs e)
         {
@@ -181,12 +181,12 @@ namespace Butik
                 int i = cartGrid.CurrentCell.RowIndex;
                 if (data.cart[i].Quantity > 1)
                 {
-                  data.cart[i].DecreaseQuantity();
-                }                
+                    data.cart[i].DecreaseQuantity();
+                }
                 else
                 {
-                  data.cart.Remove(data.cart[i]);
-                }        
+                    data.cart.Remove(data.cart[i]);
+                }
 
                 RefreshCartGrid();
                 data.SaveToFile();
@@ -202,23 +202,27 @@ namespace Butik
 
         private void SubmitDiscountButtonClick(object sender, EventArgs e)
         {
+            string message;
+            string caption;
+
             if (data.cart.Count == 0)
             {
-                string m = "Your shopping cart is empty!";
-                string c = "";
-                DialogResult r = MessageBox.Show(m, c,
+                message = "Your shopping cart is empty!";
+                caption = "";
+                DialogResult r = MessageBox.Show(message, caption,
                                              MessageBoxButtons.OK,
-                                             MessageBoxIcon.Warning);
-                return;               
+                                             MessageBoxIcon.Warning);              
             }
+            else
+            {
 
             var submit = sender as Button;
-            var  keyCeck = "";
-            double valueCheck = 0;
+            var code = "";
+            double discount = 0;
 
-            string message = "Make sure you finished buying before using your discount code!" +
-                             "\n Would you like to proceed?";
-            string caption = "";
+            message = "Make sure you finished buying before using your discount code!" +
+                            "\n Would you like to proceed?";
+            caption = "";
             DialogResult result = MessageBox.Show(message, caption,
                                          MessageBoxButtons.YesNo,
                                          MessageBoxIcon.Question);
@@ -231,29 +235,30 @@ namespace Butik
             {
                 if (discountTextBox.Text == pair.Key)
                 {
-                    keyCeck = pair.Key;
-                    valueCheck = pair.Value;
+                    code = pair.Key;
+                    discount = pair.Value;
                 }
             }
 
-            if (keyCeck == "")
+            if (code == "")
             {
                 MessageBox.Show("INVALID CODE!\nPlease try again", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                totalDiscount = totalCost * (valueCheck / 100);
+                totalDiscount = totalCost * (discount / 100);
                 totalCost -= totalDiscount;
                 priceLabel.Text = "$" + totalCost;
                 discountLabel.Text = "-$" + totalDiscount;
 
                 // Erasing Discount Code from file.
-                string[] temp = File.ReadLines("DiscountList.csv").Where(d => d != $"{keyCeck},{valueCheck}").ToArray();
+                string[] temp = File.ReadLines("DiscountList.csv").Where(d => d != $"{code},{discount}").ToArray();
                 File.WriteAllLines("DiscountList.csv", temp);
-                data.discountCodes.Remove(keyCeck);
+                data.discountCodes.Remove(code);
                 submit.Enabled = false;
 
                 RefreshCartGrid();
+            }
             }
 
         }
