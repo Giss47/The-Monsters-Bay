@@ -10,12 +10,12 @@ namespace Butik
 {
     class Data
     {
-        public string CartFile { get => @"C:\Windows\Temp\cart.mbc"; }
+        public string CartFile => @"C:\Windows\Temp\cart.mbc";
 
         private static string[] stringProducts = File.ReadAllLines("Trucks.csv");
 
         private Product[] products = new Product[stringProducts.Length];
-        public Product[] Products { get => products; }
+        public Product[] Products => products;
 
         public Dictionary<string, double> discountCodes = new Dictionary<string, double> { };
         public List<CartProduct> cart = new List<CartProduct> { };
