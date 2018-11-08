@@ -266,11 +266,8 @@ namespace Butik
                     totalCost -= totalDiscount;
                     priceLabel.Text = "$" + totalCost;
                     discountLabel.Text = "-$" + totalDiscount;
-
-                    // Erasing Discount Code from file.
-                    string[] temp = File.ReadLines("DiscountList.csv").Where(d => d != $"{code},{discount}").ToArray();
-                    File.WriteAllLines("DiscountList.csv", temp);
-                    data.discountCodes.Remove(code);
+                    
+                    data.EraseDiscountCode(code, discount);
                     submit.Enabled = false;
 
                     RefreshCartGrid();
