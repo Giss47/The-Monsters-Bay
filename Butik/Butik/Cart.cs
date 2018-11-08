@@ -93,8 +93,12 @@ namespace Butik
             discountLabel = CreateLabel("$" + totalDiscount, ContentAlignment.MiddleCenter, Color.Red);
             panel.Controls.Add(discountLabel);
 
+            Button removeAll = CreateButton("Remove All");
+            removeAll.Click += RemoveAllClick;
+            panel.Controls.Add(removeAll);
+
             Label totalCostLabel = CreateLabel("Total cost:", ContentAlignment.MiddleRight, Color.Black);
-            panel.SetColumnSpan(totalCostLabel, 2);
+            //panel.SetColumnSpan(totalCostLabel, 2);
             panel.Controls.Add(totalCostLabel);
 
             priceLabel = CreateLabel("$" + totalCost, ContentAlignment.MiddleCenter, Color.Black);
@@ -194,6 +198,18 @@ namespace Butik
             }
         }
 
+        private void RemoveAllClick(object sender, EventArgs e)
+        {
+            if (!(data.cart.Count == 0))
+            {
+                int i = cartGrid.CurrentCell.RowIndex;
+                data.cart.Remove(data.cart[i]);
+                RefreshCartGrid();
+                data.SaveToFile();
+                RecalculateTotalCost();
+            }
+        }
+
         private void DiscountTextBoxClick(object sender, EventArgs e)
         {
             var t = (TextBox)sender;
@@ -211,54 +227,54 @@ namespace Butik
                 caption = "";
                 DialogResult r = MessageBox.Show(message, caption,
                                              MessageBoxButtons.OK,
-                                             MessageBoxIcon.Warning);              
+                                             MessageBoxIcon.Warning);
             }
             else
             {
 
-            var submit = sender as Button;
-            var code = "";
-            double discount = 0;
+                var submit = sender as Button;
+                var code = "";
+                double discount = 0;
 
-            message = "Make sure you finished buying before using your discount code!" +
-                            "\n Would you like to proceed?";
-            caption = "";
-            DialogResult result = MessageBox.Show(message, caption,
-                                         MessageBoxButtons.YesNo,
-                                         MessageBoxIcon.Question);
-            if (result == DialogResult.No)
-            {
-                return;
-            }
-
-            foreach (KeyValuePair<string, double> pair in data.discountCodes)
-            {
-                if (discountTextBox.Text == pair.Key)
+                message = "Make sure you finished buying before using your discount code!" +
+                                "\n Would you like to proceed?";
+                caption = "";
+                DialogResult result = MessageBox.Show(message, caption,
+                                             MessageBoxButtons.YesNo,
+                                             MessageBoxIcon.Question);
+                if (result == DialogResult.No)
                 {
-                    code = pair.Key;
-                    discount = pair.Value;
+                    return;
                 }
-            }
 
-            if (code == "")
-            {
-                MessageBox.Show("INVALID CODE!\nPlease try again", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-            else
-            {
-                totalDiscount = totalCost * (discount / 100);
-                totalCost -= totalDiscount;
-                priceLabel.Text = "$" + totalCost;
-                discountLabel.Text = "-$" + totalDiscount;
+                foreach (KeyValuePair<string, double> pair in data.discountCodes)
+                {
+                    if (discountTextBox.Text == pair.Key)
+                    {
+                        code = pair.Key;
+                        discount = pair.Value;
+                    }
+                }
 
-                // Erasing Discount Code from file.
-                string[] temp = File.ReadLines("DiscountList.csv").Where(d => d != $"{code},{discount}").ToArray();
-                File.WriteAllLines("DiscountList.csv", temp);
-                data.discountCodes.Remove(code);
-                submit.Enabled = false;
+                if (code == "")
+                {
+                    MessageBox.Show("INVALID CODE!\nPlease try again", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                else
+                {
+                    totalDiscount = totalCost * (discount / 100);
+                    totalCost -= totalDiscount;
+                    priceLabel.Text = "$" + totalCost;
+                    discountLabel.Text = "-$" + totalDiscount;
 
-                RefreshCartGrid();
-            }
+                    // Erasing Discount Code from file.
+                    string[] temp = File.ReadLines("DiscountList.csv").Where(d => d != $"{code},{discount}").ToArray();
+                    File.WriteAllLines("DiscountList.csv", temp);
+                    data.discountCodes.Remove(code);
+                    submit.Enabled = false;
+
+                    RefreshCartGrid();
+                }
             }
 
         }
