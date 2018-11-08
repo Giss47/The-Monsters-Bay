@@ -73,7 +73,7 @@ namespace Butik
 
         public void SaveToFile()
         {
-            List<string> cartString = new List<string> { };
+            var cartString = new List<string> { };
             cart.ForEach(p => cartString.Add(p.Name + ";" + p.Quantity + ";" + p.Price));
             File.WriteAllLines(CartFile, cartString);
         }

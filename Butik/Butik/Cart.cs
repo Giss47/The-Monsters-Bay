@@ -304,10 +304,10 @@ namespace Butik
 
                 foreach (var p in data.cart)
                 {
-                    var doubleTab = "\t";
+                    var tab = "\t";
                     if (p.Name.Length < 8)
-                        doubleTab = "\t\t";
-                    receipt += string.Format("{0}\t{1}" + doubleTab + "${2}\t\t${3}\r\n", p.Quantity, p.Name, p.Price, (p.Price * p.Quantity));
+                        tab = "\t\t";
+                    receipt += string.Format("{0}\t{1}" + tab + "${2}\t\t${3}\r\n", p.Quantity, p.Name, p.Price, (p.Price * p.Quantity));
                 }
                 receipt += "\r\n \t\t\tTotal price: $" + totalCost;
 

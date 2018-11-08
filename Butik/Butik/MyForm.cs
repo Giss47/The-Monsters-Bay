@@ -107,8 +107,8 @@ namespace Butik
 
         private void SortProducts(object sender, EventArgs e)
         {
-            ComboBox c = (ComboBox)sender;
-            Product[] sortedArray = new Product[] { };
+            var c = (ComboBox)sender;
+            var sortedArray = new Product[] { };
             if (c.SelectedIndex == 0)
             { return; }
             else if (c.SelectedIndex == 1)
@@ -137,7 +137,7 @@ namespace Butik
 
         private void MusicONOFFClick(object sender, EventArgs e)
         {
-            var b = sender as Button;
+            var b = (Button)sender;
             if (musicON)
             {
                 iWannaRock.Stop();
@@ -198,7 +198,8 @@ namespace Butik
             };
             panel.SetColumnSpan(box, 2);
             panel.Controls.Add(box);
-            ToolTip popUp = new ToolTip();
+
+            var popUp = new ToolTip();
             popUp.SetToolTip(box, "Click to view details");
 
             box.Click += (s, e) => { ShowProductDetailsPanel(GetProductDetailsPanel(p)); };
