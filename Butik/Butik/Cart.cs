@@ -306,7 +306,8 @@ namespace Butik
                         tab = "\t\t";
                     receipt += string.Format("{0}\t{1}" + tab + "${2}\t\t${3}\r\n", p.Quantity, p.Name, p.Price, (p.Price * p.Quantity));
                 }
-                receipt += "\r\n \t\t\tTotal price: $" + totalCost;
+                receipt += "\r\n \t\t\tTotal discount:\t$" + totalDiscount;
+                receipt += "\r\n \t\t\tTotal price:\t$" + totalCost;
 
                 DialogResult result = MessageBox.Show(
                         receipt + "\r\n \r\n Would you like to print the receipt?",

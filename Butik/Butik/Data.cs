@@ -11,6 +11,7 @@ namespace Butik
     class Data
     {
         public string CartFile => @"C:\Windows\Temp\cart.mbc";
+        private string DiscountFile => @"resources\DiscountList.csv";
 
         private static string[] stringProducts = File.ReadAllLines(@"resources\Trucks.csv");
 
@@ -57,9 +58,9 @@ namespace Butik
                     cart.Add(new CartProduct(p[0], int.Parse(p[1]), double.Parse(p[2])));
                 }
             }
-            if (File.Exists(@"resources\DiscountList.csv"))
+            if (File.Exists(DiscountFile))
             {
-                string[] getDiscountCodes = File.ReadAllLines(@"resources\DiscountList.csv");
+                string[] getDiscountCodes = File.ReadAllLines(DiscountFile);
                 foreach (var s in getDiscountCodes)
                 {
                     string[] codes = s.Split(',');
@@ -80,8 +81,8 @@ namespace Butik
 
         public void EraseDiscountCode(string code, double discount)
         {
-            string[] temp = File.ReadLines(@"resources\DiscountList.csv").Where(d => d != $"{code},{discount}").ToArray();
-            File.WriteAllLines(@"resources\DiscountList.csv", temp);
+            string[] temp = File.ReadLines(DiscountFile).Where(d => d != $"{code},{discount}").ToArray();
+            File.WriteAllLines(DiscountFile, temp);
             discountCodes.Remove(code);
         }
     }
