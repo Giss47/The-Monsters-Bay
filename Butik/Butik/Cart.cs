@@ -31,6 +31,8 @@ namespace Butik
             RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             RowStyles.Add(new RowStyle(SizeType.Absolute, 140));
 
+            
+
             this.data = data;
 
             this.data.cart.ForEach(p => totalCost += p.Cost);

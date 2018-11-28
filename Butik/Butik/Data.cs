@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Net;
 
 namespace Butik
 {
@@ -12,41 +15,18 @@ namespace Butik
     {
         public string CartFile => @"C:\Windows\Temp\cart.mbc";
         private string DiscountFile => @"resources\DiscountList.csv";
+        
+        private static SqlConnection con;
 
-        private static string[] stringProducts = File.ReadAllLines(@"resources\Trucks.csv");
-
-        private Product[] products = new Product[stringProducts.Length];
-        public Product[] Products => products;
+        public Product[] Products { get; }
 
         public Dictionary<string, double> discountCodes = new Dictionary<string, double> { };
         public List<CartProduct> cart = new List<CartProduct> { };
 
         public Data()
         {
-            var count = 0;
-            var errorLines = "";
-            for (var i = 0; i < stringProducts.Length; i++)
-            {
-                string[] p = stringProducts[i].Split(';');
-
-                if (p.Length < 4)
-                {
-                    errorLines += " . " + (i + 1);
-                    Array.Resize(ref products, products.Length - 1);
-                }
-                else
-                {
-                    products[count] = new Product(p[0], int.Parse(p[1]), p[2], p[3]);
-
-                    count++;
-                }
-            }
-            if (errorLines != "")
-            {
-                MessageBox.Show("\tWarning! " +
-                                "\nInformation missing in products file, " +
-                                "Line/Lines: " + errorLines);
-            }
+            con = Con();
+            Products = ImportProducts();
 
             if (File.Exists(CartFile))
             {
@@ -84,6 +64,47 @@ namespace Butik
             string[] temp = File.ReadLines(DiscountFile).Where(d => d != $"{code},{discount}").ToArray();
             File.WriteAllLines(DiscountFile, temp);
             discountCodes.Remove(code);
+        }
+
+        private SqlConnection Con()
+        {
+            return new SqlConnection("Data Source=den1.mssql7.gear.host;" +
+                "Initial Catalog=monsterbay;" +
+                "Persist Security Info=True;" +
+                "User ID=monsterbay;" +
+                "Password=monsterbay2018!");
+        }
+        
+        private Product[] ImportProducts()
+        {
+            Product[] products;
+            con.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT * FROM Products", con))
+            {
+                List<Product> listProducts = new List<Product> { };
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Image img;
+                            using (WebClient client = new WebClient())
+                            {
+                                byte[] imageData = client.DownloadData(Convert.ToString(reader["ImageLocation"]));
+                                MemoryStream stream = new MemoryStream(imageData);
+                                img = Image.FromStream(stream);
+                                stream.Close();
+                            }
+
+                            listProducts.Add(new Product(
+                                Convert.ToString(reader["Name"]),
+                                Convert.ToDouble(reader["Price"]),
+                                Convert.ToString(reader["Description"]), img));
+                        }
+                    }
+                }
+                return products = listProducts.ToArray();
+            }
         }
     }
 }

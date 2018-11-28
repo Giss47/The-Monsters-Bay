@@ -205,7 +205,7 @@ namespace Butik
             box.Click += (s, e) => { ShowProductDetailsPanel(GetProductDetailsPanel(p)); };
             try
             {
-                box.Image = Image.FromFile(p.ImageLocation);
+                box.Image = p.ImageData;
                 box.MouseHover += (s, e) => { box.BackColor = Color.Red; };
                 box.MouseLeave += (s, e) => { box.BackColor = Color.LightGray; };
             }
@@ -265,7 +265,7 @@ namespace Butik
             // In case image is missing or direcory is writen wrong.
             try
             {
-                picBox.Image = Image.FromFile(p.ImageLocation);
+                picBox.Image = p.ImageData;
             }
             catch
             {
